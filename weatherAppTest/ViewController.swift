@@ -1,19 +1,24 @@
-//
-//  ViewController.swift
-//  weatherAppTest
-//
-//  Created by sem1 on 28.05.22.
-//
 
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    let networkWeatherManager = NetworkingManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        getSomeThing(choose: "Minsk")
     }
-
-
+    
+    private func getSomeThing(choose city: String) {
+        networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
+            switch result {
+            case .success(let weather):
+                print(weather)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
 }
 
