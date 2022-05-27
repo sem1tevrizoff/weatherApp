@@ -20,5 +20,9 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    private func setUpLayouts() {
+        
+    }
 }
 
