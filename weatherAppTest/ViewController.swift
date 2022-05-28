@@ -7,7 +7,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getSomeThing(choose: "Minsk")
+        getSomeThing(choose: "Brest")
     }
     
     private func getSomeThing(choose city: String) {

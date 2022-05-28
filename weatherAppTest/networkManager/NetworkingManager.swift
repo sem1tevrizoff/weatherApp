@@ -41,15 +41,36 @@ class NetworkingManager {
                 completion(.failure(.invalidData))
                 return
             }
+
+            #warning("Below are some debug code I added and comments")
+            #warning("Also I added we comments to your model")
+            #warning("Nice netowrk layer btw 😉👍")
+            #warning("These warnings you can safely delete")
             
+            self.logResponse(for: data) //Prints to console response
             do {
                 let responseObject = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(responseObject))
-                
+            } catch let DecodingError.dataCorrupted(context) { //Prints to console different type of errors
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context) {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
             } catch {
-                completion(.failure(.invalidData))
+                print("error: ", error)
             }
         }
         dataTask.resume()
+    }
+    
+    func logResponse(for data: Data) {
+        let jsonData = try? JSONSerialization.jsonObject(with: data)
+        print(String(describing: jsonData))
     }
 }
