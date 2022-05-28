@@ -30,7 +30,7 @@ struct Coord: Codable {
 // MARK: - Main
 struct Main: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
-    let pressure, humidity, seaLevel, grndLevel: Int
+    let pressure, humidity, seaLevel, grndLevel: Int?
     #warning("To fix parsing issue make seaLevel optional, i.e. Int?")
     #warning("Maybe you will have to make some other properties oprtional too")
     #warning("Also I would recommend to make a nested struct (one inside another)")
@@ -95,5 +95,5 @@ struct WeatherElement: Codable {
 struct Wind: Codable {
     let speed: Double
     let deg: Int
-    let gust: Double
+    let gust: Double?
 }
