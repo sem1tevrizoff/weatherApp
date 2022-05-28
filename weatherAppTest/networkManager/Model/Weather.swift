@@ -31,7 +31,36 @@ struct Coord: Codable {
 struct Main: Codable {
     let temp, feelsLike, tempMin, tempMax: Double
     let pressure, humidity, seaLevel, grndLevel: Int
-
+    #warning("To fix parsing issue make seaLevel optional, i.e. Int?")
+    #warning("Maybe you will have to make some other properties oprtional too")
+    #warning("Also I would recommend to make a nested struct (one inside another)")
+    #warning("It's common practice to do like this. See below")
+    
+//    struct Weather: Codable {
+//        let coord: Coord
+//        let weather: [WeatherElement]
+//        let base: String
+//        let main: Main
+//        let visibility: Int
+//        let wind: Wind
+//        let clouds: Clouds
+//        let dt: Int
+//        let sys: Sys
+//        let timezone, id: Int
+//        let name: String
+//        let cod: Int
+//
+//        struct Coord {
+//
+//        }
+//
+//        struct Clouds {
+//
+//        }
+//
+//        etc...
+//    }
+    
     enum CodingKeys: String, CodingKey {
         case temp
         case feelsLike = "feels_like"
