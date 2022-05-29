@@ -8,7 +8,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         getSomeThing(choose: "Minsk")
-        
     }
     
     private func getSomeThing(choose city: String) {
@@ -20,10 +19,6 @@ class ViewController: UIViewController {
                 print(error)
             }
         }
-    }
-    
-    private func setUpLayouts() {
-        
     }
 }
 
