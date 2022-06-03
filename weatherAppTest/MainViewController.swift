@@ -1,21 +1,21 @@
 import UIKit
 
-protocol MainViewDelegate: AnyObject {
-    func updateUI(with weather: [Weather])
-    func changeLabel(city: String)
-}
-
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     var weatherModel = [Weather]()
-    let someLabel = UILabel()
+    
+    let nameCityLabel = UILabel()
+    let currentTempLabel = UILabel()
+    let descriptionLabel = UILabel()
+    let maxMinTempLabel = UILabel()
+    
+    let chooseCityButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setUpLabel()
-        presenter.getSomeThing(choose: "Moscow")
+        setUpLayouts()
     }
     
     init(presenter: MainPresenter) {
@@ -26,33 +26,88 @@ class MainViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    private func setUpLabel() {
-        view.addSubview(someLabel)
-        someLabel.textAlignment = .center
-        someLabel.translatesAutoresizingMaskIntoConstraints = false
+    
+    private func setUpLayouts() {
+        [nameCityLabel, currentTempLabel, descriptionLabel, maxMinTempLabel].forEach({
+            view.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            $0.textAlignment = .center
+            
+            NSLayoutConstraint.activate([
+                $0.heightAnchor.constraint(equalToConstant: 100)
+            ])
+        })
+        setUpCityNameLabel()
+        setUpCurrentTempLabel()
+        setUpDescriptionLabel()
+        setUpMaxMinLabel()
+        setUpChooseCityButton()
+        presenter.setUpMainInfoLabels(choose: "Moscow")
+    }
+    
+    private func setUpMaxMinLabel() {
+        maxMinTempLabel.font = UIFont.systemFont(ofSize: 20)
         
         NSLayoutConstraint.activate([
-            someLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            someLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            someLabel.heightAnchor.constraint(equalToConstant: 100),
-            someLabel.widthAnchor.constraint(equalToConstant: 200)
+            maxMinTempLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            maxMinTempLabel.centerYAnchor.constraint(equalTo: descriptionLabel.centerYAnchor, constant: 40),
+            maxMinTempLabel.widthAnchor.constraint(equalToConstant: 400)
         ])
     }
+    
+    private func setUpDescriptionLabel() {
+        descriptionLabel.font = UIFont.systemFont(ofSize: 30)
+        
+        NSLayoutConstraint.activate([
+            descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            descriptionLabel.centerYAnchor.constraint(equalTo: currentTempLabel.centerYAnchor, constant: 50),
+            descriptionLabel.widthAnchor.constraint(equalToConstant: 300),
+        ])
+    }
+    
+    private func setUpCurrentTempLabel() {
+        currentTempLabel.font = UIFont.systemFont(ofSize: 60)
+        
+        NSLayoutConstraint.activate([
+            currentTempLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            currentTempLabel.centerYAnchor.constraint(equalTo: nameCityLabel.centerYAnchor, constant: 70),
+            currentTempLabel.widthAnchor.constraint(equalToConstant: 200)
+        ])
+    }
+
+    private func setUpCityNameLabel() {
+        nameCityLabel.font = UIFont.systemFont(ofSize: 40)
+        
+        NSLayoutConstraint.activate([
+            nameCityLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nameCityLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -350),
+            nameCityLabel.widthAnchor.constraint(equalToConstant: 200)
+        ])
+    }
+    
+    private func setUpChooseCityButton() {
+        view.addSubview(chooseCityButton)
+        chooseCityButton.setImage(UIImage(systemName: "plus.circle"), for: .normal)
+        chooseCityButton.isUserInteractionEnabled = true
+        chooseCityButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            chooseCityButton.centerXAnchor.constraint(equalTo: nameCityLabel.centerXAnchor, constant: 150),
+            chooseCityButton.centerYAnchor.constraint(equalTo: nameCityLabel.centerYAnchor, constant: 20),
+            chooseCityButton.heightAnchor.constraint(equalToConstant: 50),
+            chooseCityButton.widthAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        chooseCityButton.addTarget(self, action: #selector(changeCity), for: .touchUpInside)
+    }
+    
+    @objc private func changeCity() {
+        showAlert()
+    }
+    
 }
 
-extension MainViewController: MainViewDelegate {
-    
-    func updateUI(with weather: [Weather]) {
-        self.weatherModel = weather
-    }
-    
-    func changeLabel(city: String) {
-        DispatchQueue.main.async {
-            self.someLabel.text = city
-        }
-    }
-}
+
 
 
 
