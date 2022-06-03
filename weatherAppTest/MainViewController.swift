@@ -21,6 +21,8 @@ class MainViewController: UIViewController {
     init(presenter: MainPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        
+        
     }
     
     required init?(coder: NSCoder) {
