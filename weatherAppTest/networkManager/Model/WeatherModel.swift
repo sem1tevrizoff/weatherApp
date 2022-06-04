@@ -6,15 +6,15 @@ struct Weather: Codable {
     let weather: [WeatherModel]
     let base: String
     let main: Main
-    let visibility: Int
+    let visibility: Float
     let wind: Wind
     let clouds: Clouds
-    let dt: Int
+    let dt: Float
     let sys: Sys
-    let timezone: Int
-    let id: Int
+    let timezone: Float
+    let id: Int?
     let name: String
-    let cod: Int
+    let cod: Float
     
     struct Coord: Codable {
         let lon, lan: Double?
@@ -28,12 +28,12 @@ struct Weather: Codable {
     }
     
     struct Main: Codable {
-        let temp: Double
-        let feelsLike: Double
-        let tempMin: Double
-        let tempMax: Double
-        let pressure: Int?
-        let humidity: Int?
+        let temp: Float
+        let feelsLike: Float
+        let tempMin: Float
+        let tempMax: Float
+        let pressure: Float
+        let humidity: Float
         
         enum CodingKeys: String, CodingKey {
             case temp
@@ -45,20 +45,20 @@ struct Weather: Codable {
     }
     
     struct Wind: Codable {
-        let speed: Double
-        let deg: Int?
+        let speed: Float
+        let deg: Float
     }
     
     struct Clouds: Codable {
-        let all: Int
+        let all: Float
     }
     
     struct Sys: Codable {
         let type: Int?
         let id: Int?
         let country: String
-        let sunrise: Int
-        let sunset: Int
+        let sunrise: Float
+        let sunset: Float
     }
 }
 
