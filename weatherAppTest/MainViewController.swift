@@ -21,8 +21,6 @@ class MainViewController: UIViewController {
     init(presenter: MainPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -44,7 +42,8 @@ class MainViewController: UIViewController {
         setUpDescriptionLabel()
         setUpMaxMinLabel()
         setUpChooseCityButton()
-        presenter.setUpMainInfoLabels(choose: "Moscow")
+//        presenter.setUpMainInfoLabels(choose: "Moscow")
+        presenter.setUpForecastWeather(choose: "Brest")
     }
     
     private func setUpMaxMinLabel() {

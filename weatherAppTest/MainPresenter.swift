@@ -16,7 +16,18 @@ class MainPresenter {
                                                   descriptionWeather: weatherModel.weather[0].description,
                                                   maxTemp: weatherModel.main.tempMax,
                                                   minTemp: weatherModel.main.tempMin)
-                print(weatherModel)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    func setUpForecastWeather(choose city: String) {
+        networkWeatherManager.request(endpoint: WeatherAPI.forecast(city)) { (result: Result<ForecastWeather, NetworkingError>) in
+            switch result {
+            case .success(let forecastWeather):
+                print(forecastWeather)
             case .failure(let error):
                 print(error)
             }
