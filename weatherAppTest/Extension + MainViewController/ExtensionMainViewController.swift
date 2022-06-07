@@ -1,5 +1,7 @@
 import Foundation
 import UIKit
+
+#warning("Делать extension отдельным файлом, если это extension одного вьюконтроллера, фиговая практика. Лучше их деражать в одном классе с контроллером. А в extension полноценные extension - как твой Float")
 extension MainViewController: MainViewDelegate {
     
     func updateUI(with weather: [Weather]) {
@@ -47,42 +49,81 @@ extension MainViewController {
     }
 }
 
+// <<<<<<< code-review
+// #warning("Если очень хочется extension можно сдедать как внизу. Но можно и просто перенести функцию showAlert() в MainViewController")
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+// /*
+// extension UIViewController {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let forecastWeather: [ForecastTemperature] = []
-        return forecastWeather.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+//     func showCityAlert(with completion: @escaping (String) -> Void) {
+//         let alertVC = UIAlertController(title: "Choose City",
+//                                         message: nil,
+//                                         preferredStyle: .alert)
+//         alertVC.addTextField { textField in
+//             textField.placeholder = "City Name"
+//         }
         
-        let dailyForecast: [ForecastTemperature] = []
-        cell.configure(with: dailyForecast[indexPath.row])
-        return cell
-    }
+//         let allertAction = UIAlertAction(title: "Find", style: .default) { UIAlertAction in
+//             let firstTextField = alertVC.textFields![0] as UITextField
+//             guard let cityName = firstTextField.text else { return }
+//             completion(cityName)
+//         }
+        
+//         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        
+//         alertVC.addAction(allertAction)
+//         alertVC.addAction(cancelAction)
+        
+//         self.present(alertVC, animated: true)
+//     }
+// }
+
+// //Вызывать так из ViewController'а
+
+// showCityAlert { [weak self] cityName in
+//     self?.presenter.setUpMainInfoLabels(choose: cityName)
+// }
+ 
+// //Еще вариант - сделать класс типа AlertPresenter 
+// */
+// =======
+
+// extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    func createCompositionalLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            self.createFeaturedSection()
-        }
+//     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//         let forecastWeather: [ForecastTemperature] = []
+//         return forecastWeather.count
+//     }
+    
+//     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+        
+//         let dailyForecast: [ForecastTemperature] = []
+//         cell.configure(with: dailyForecast[indexPath.row])
+//         return cell
+//     }
+    
+//     func createCompositionalLayout() -> UICollectionViewLayout {
+//         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+//             self.createFeaturedSection()
+//         }
 
-        let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        layout.configuration = configuration
-        return layout
-    }
+//         let configuration = UICollectionViewCompositionalLayoutConfiguration()
+//         layout.configuration = configuration
+//         return layout
+//     }
 
-    func createFeaturedSection() -> NSCollectionLayoutSection {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+//     func createFeaturedSection() -> NSCollectionLayoutSection {
+//         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
 
-       let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
-       layoutItem.contentInsets = NSDirectionalEdgeInsets(top:5, leading: 5, bottom: 0, trailing: 5)
+//        let layoutItem = NSCollectionLayoutItem(layoutSize: itemSize)
+//        layoutItem.contentInsets = NSDirectionalEdgeInsets(top:5, leading: 5, bottom: 0, trailing: 5)
 
-       let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(110))
-       let layoutGroup = NSCollectionLayoutGroup.vertical(layoutSize: layoutGroupSize, subitems: [layoutItem])
+//        let layoutGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(110))
+//        let layoutGroup = NSCollectionLayoutGroup.vertical(layoutSize: layoutGroupSize, subitems: [layoutItem])
 
-       let layoutSection = NSCollectionLayoutSection(group: layoutGroup)
-       return layoutSection
-    }
-}
+//        let layoutSection = NSCollectionLayoutSection(group: layoutGroup)
+//        return layoutSection
+//     }
+// }
+// >>>>>>> develop

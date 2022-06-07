@@ -1,6 +1,8 @@
 import Foundation
 import UIKit
 
+#warning("Протокол обычно помещают в том же файле. Я бы переместил MainViewDelegate сюда и переименовал в MainPresenterDelegate")
+
 class MainPresenter {
     
     let networkWeatherManager = NetworkingManager()
@@ -12,6 +14,7 @@ class MainPresenter {
             switch result {
             case .success(let weatherModel):
                 self.viewDelegate?.updateUI(with: [weatherModel])
+                #warning("Не понятно зачем ты передаешь [weatherModel] во вью контроллер, когда так хорошо и правильно разделил функции и передаешь туда всю нужную инфу через setUpMainLabel. updateUI можно выпилить. ")
                 self.viewDelegate?.setUpMainLabel(city: weatherModel.name,
                                                   temp: weatherModel.main.temp,
                                                   descriptionWeather: weatherModel.weather[0].description,
