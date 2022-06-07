@@ -4,9 +4,9 @@ import UIKit
 #warning("Делать extension отдельным файлом, если это extension одного вьюконтроллера, фиговая практика. Лучше их деражать в одном классе с контроллером. А в extension полноценные extension - как твой Float")
 extension MainViewController: MainViewDelegate {
     
-    func updateUI(with weather: [Weather]) {
-        self.weatherModel = weather
-    }
+//    func updateUI(with weather: [Weather]) {
+//        self.weatherModel = weather
+//    }
     
     func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float) {
         DispatchQueue.main.async {
@@ -17,7 +17,8 @@ extension MainViewController: MainViewDelegate {
         }
     }
     
-    func setUpForecastWeather(city: String) {
+    func setUpForecastWeather(with model: ForecastWeather) {
+        self.weatherModel = model
         DispatchQueue.main.async {
             self.forecastCollectionView.reloadData()
         }
@@ -52,61 +53,90 @@ extension MainViewController {
 // <<<<<<< code-review
 // #warning("Если очень хочется extension можно сдедать как внизу. Но можно и просто перенести функцию showAlert() в MainViewController")
 
-// /*
-// extension UIViewController {
-    
-//     func showCityAlert(with completion: @escaping (String) -> Void) {
-//         let alertVC = UIAlertController(title: "Choose City",
-//                                         message: nil,
-//                                         preferredStyle: .alert)
-//         alertVC.addTextField { textField in
-//             textField.placeholder = "City Name"
-//         }
-        
-//         let allertAction = UIAlertAction(title: "Find", style: .default) { UIAlertAction in
-//             let firstTextField = alertVC.textFields![0] as UITextField
-//             guard let cityName = firstTextField.text else { return }
-//             completion(cityName)
-//         }
-        
-//         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-        
-//         alertVC.addAction(allertAction)
-//         alertVC.addAction(cancelAction)
-        
-//         self.present(alertVC, animated: true)
-//     }
-// }
-
-// //Вызывать так из ViewController'а
-
-// showCityAlert { [weak self] cityName in
-//     self?.presenter.setUpMainInfoLabels(choose: cityName)
-// }
- 
-// //Еще вариант - сделать класс типа AlertPresenter 
-// */
-// =======
-
-// extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+// <<<<<<< collection-view-fix
+// extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
 //     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//         let forecastWeather: [ForecastTemperature] = []
-//         return forecastWeather.count
+//         return weatherModel?.list.count ?? 0
 //     }
     
 //     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+//         guard
+//             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell,
+//             let cellModel = weatherModel?.list[indexPath.row]
+//         else {
+//             return UICollectionViewCell()
+//         }
         
-//         let dailyForecast: [ForecastTemperature] = []
-//         cell.configure(with: dailyForecast[indexPath.row])
+//         cell.configure(with: cellModel)
 //         return cell
+//     }
+    
+//     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//         return CGSize(width: 200, height: 200)
 //     }
     
 //     func createCompositionalLayout() -> UICollectionViewLayout {
 //         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
 //             self.createFeaturedSection()
 //         }
+// =======
+// // /*
+// // extension UIViewController {
+    
+// //     func showCityAlert(with completion: @escaping (String) -> Void) {
+// //         let alertVC = UIAlertController(title: "Choose City",
+// //                                         message: nil,
+// //                                         preferredStyle: .alert)
+// //         alertVC.addTextField { textField in
+// //             textField.placeholder = "City Name"
+// //         }
+        
+// //         let allertAction = UIAlertAction(title: "Find", style: .default) { UIAlertAction in
+// //             let firstTextField = alertVC.textFields![0] as UITextField
+// //             guard let cityName = firstTextField.text else { return }
+// //             completion(cityName)
+// //         }
+        
+// //         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        
+// //         alertVC.addAction(allertAction)
+// //         alertVC.addAction(cancelAction)
+        
+// //         self.present(alertVC, animated: true)
+// //     }
+// // }
+
+// // //Вызывать так из ViewController'а
+
+// // showCityAlert { [weak self] cityName in
+// //     self?.presenter.setUpMainInfoLabels(choose: cityName)
+// // }
+ 
+// // //Еще вариант - сделать класс типа AlertPresenter 
+// // */
+// // =======
+
+// // extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+// //     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+// //         let forecastWeather: [ForecastTemperature] = []
+// //         return forecastWeather.count
+// //     }
+    
+// //     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+// //         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+        
+// //         let dailyForecast: [ForecastTemperature] = []
+// //         cell.configure(with: dailyForecast[indexPath.row])
+// //         return cell
+// //     }
+    
+// //     func createCompositionalLayout() -> UICollectionViewLayout {
+// //         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+// //             self.createFeaturedSection()
+// //         }
+// >>>>>>> develop
 
 //         let configuration = UICollectionViewCompositionalLayoutConfiguration()
 //         layout.configuration = configuration
