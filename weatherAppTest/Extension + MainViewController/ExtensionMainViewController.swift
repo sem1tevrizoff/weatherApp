@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 extension MainViewController: MainViewDelegate {
     
-    func updateUI(with weather: [Weather]) {
-        self.weatherModel = weather
-    }
+//    func updateUI(with weather: [Weather]) {
+//        self.weatherModel = weather
+//    }
     
     func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float) {
         DispatchQueue.main.async {
@@ -15,7 +15,8 @@ extension MainViewController: MainViewDelegate {
         }
     }
     
-    func setUpForecastWeather(city: String) {
+    func setUpForecastWeather(with model: ForecastWeather) {
+        self.weatherModel = model
         DispatchQueue.main.async {
             self.forecastCollectionView.reloadData()
         }
@@ -48,19 +49,26 @@ extension MainViewController {
 }
 
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let forecastWeather: [ForecastTemperature] = []
-        return forecastWeather.count
+        return weatherModel?.list.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell else { return UICollectionViewCell() }
+        guard
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell,
+            let cellModel = weatherModel?.list[indexPath.row]
+        else {
+            return UICollectionViewCell()
+        }
         
-        let dailyForecast: [ForecastTemperature] = []
-        cell.configure(with: dailyForecast[indexPath.row])
+        cell.configure(with: cellModel)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 200, height: 200)
     }
     
     func createCompositionalLayout() -> UICollectionViewLayout {

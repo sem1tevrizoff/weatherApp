@@ -3,8 +3,9 @@ import UIKit
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
-    var weatherModel = [Weather]()
-    var forecastData: [ForecastTemperature] = []
+//    var weatherModel = [Weather]()
+//    var forecastData: [ForecastTemperature] = []
+    var weatherModel: ForecastWeather?
     
     let nameCityLabel = UILabel()
     let currentTempLabel = UILabel()
