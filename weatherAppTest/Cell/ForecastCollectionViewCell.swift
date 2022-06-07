@@ -9,6 +9,7 @@ class ForecastCollectionViewCell: UICollectionViewCell, UICollectionViewDelegate
         label.text = "Monday"
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
         return label
     }()
     
@@ -49,9 +50,8 @@ class ForecastCollectionViewCell: UICollectionViewCell, UICollectionViewDelegate
     func layoutViews() {
         weekdaylabel.topAnchor.constraint(equalTo: topAnchor, constant: 12).isActive = true
         weekdaylabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-        weekdaylabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        weekdaylabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        
+        weekdaylabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 8).isActive = true
+        weekdaylabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8).isActive = true
     }
     
     required init?(coder: NSCoder) {
@@ -93,8 +93,22 @@ class ForecastCollectionViewCell: UICollectionViewCell, UICollectionViewDelegate
         return cell
     }
     
-    func configure(with item: ForecastTemperature) {
-        weekdaylabel.text = item.weekDay
-        dailyForecast = item.hourlyForecast ?? []
+    func configure(with item: ForecastWeather.List) {
+        let temperature = item.main.feelsLike
+        weekdaylabel.text = "\(temperature)"
+//        weekdaylabel.text = "It feels like \(howItFeelsLike(with: temperature))"
+//        dailyForecast = item.clouds
+    }
+    
+    private func howItFeelsLike(with temp: Float) -> String {
+        if temp >= 303.15 {
+            return "🥵"
+        }else if temp > 288.15 && temp < 303.15 {
+            return "😎"
+        } else if temp >= 273.15 && temp < 288.15 {
+            return "😮‍💨"
+        } else {
+            return "🥶"
+        }
     }
 }
