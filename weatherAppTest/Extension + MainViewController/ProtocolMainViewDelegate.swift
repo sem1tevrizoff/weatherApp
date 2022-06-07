@@ -3,7 +3,11 @@ import Foundation
 protocol MainViewDelegate: AnyObject {
     func updateUI(with weather: [Weather])
     func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float)
-    #warning("Много параметров в функции не есть хорошо. Я бы сделал модель MainViewModel и собирал бы её в презентере. Норм практика. Пример внизу")
+// <<<<<<< code-review
+//     #warning("Много параметров в функции не есть хорошо. Я бы сделал модель MainViewModel и собирал бы её в презентере. Норм практика. Пример внизу")
+// =======
+//     func setUpForecastWeather(city: String)
+// >>>>>>> develop
 }
 
 /*

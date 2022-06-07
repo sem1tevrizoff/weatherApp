@@ -4,11 +4,14 @@ class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     var weatherModel = [Weather]()
+    var forecastData: [ForecastTemperature] = []
     
     let nameCityLabel = UILabel()
     let currentTempLabel = UILabel()
     let descriptionLabel = UILabel()
     let maxMinTempLabel = UILabel()
+    
+    let forecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
     let chooseCityButton = UIButton()
     
@@ -42,8 +45,29 @@ class MainViewController: UIViewController {
         setUpDescriptionLabel()
         setUpMaxMinLabel()
         setUpChooseCityButton()
-//        presenter.setUpMainInfoLabels(choose: "Moscow")
+        setUpForecastCollectionView()
+        presenter.setUpMainInfoLabels(choose: "Moscow")
         presenter.setUpForecastWeather(choose: "Brest")
+        
+    }
+    
+    private func setUpForecastCollectionView() {
+        view.addSubview(forecastCollectionView)
+        forecastCollectionView.backgroundColor = .systemBackground
+        forecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        forecastCollectionView.delegate = self
+        forecastCollectionView.dataSource = self
+        
+        forecastCollectionView.register(ForecastCollectionViewCell.self,
+                                        forCellWithReuseIdentifier: "ForecastCollectionViewCell")
+        
+        NSLayoutConstraint.activate([
+            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
+            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+            forecastCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     private func setUpMaxMinLabel() {

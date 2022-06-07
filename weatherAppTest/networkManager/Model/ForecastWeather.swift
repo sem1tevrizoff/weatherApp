@@ -6,7 +6,7 @@ struct ForecastWeather: Codable {
     let cnt: Int
     let list: [List]
     let city: City
-    
+
     struct List: Codable {
         let dt: Float
         let main: Main
@@ -16,19 +16,19 @@ struct ForecastWeather: Codable {
         let visibility: Float
         let pop: Float
         let dataText: String?
-        
+
         enum CodingKeys: String, CodingKey {
             case dt, main, weather, clouds, wind, visibility, pop
             case dataText = "dt_txt"
         }
     }
-    
+
     struct City: Codable {
         let id: Float
         let name: String
         let country: String
     }
-    
+
     struct Main: Codable {
         let temp: Float
         let feelsLike: Float
@@ -39,7 +39,7 @@ struct ForecastWeather: Codable {
         let grndLevel: Float
         let humidity: Float
         let tempKf: Float
-        
+
         enum CodingKeys: String, CodingKey {
             case temp
             case feelsLike = "feels_like"
@@ -52,18 +52,18 @@ struct ForecastWeather: Codable {
             case tempKf = "temp_kf"
         }
     }
-    
+
     struct Weather: Codable {
         let id: Float
         let main: String
         let description: String
         let icon: String
     }
-    
+
     struct Clouds: Codable {
         let all: Float
     }
-    
+
     struct Wind: Codable {
         let speed: Float
         let deg: Float
@@ -75,8 +75,23 @@ struct ForecastWeather: Codable {
     }
 }
 
+struct WeatherInfo {
+    let temp: Float
+    let min_temp: Float
+    let max_temp: Float
+    let description: String
+    let icon: String
+    let time: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case temp
+        case minTemp = "min_temp"
+        case maxTemp = "max_temp"
+        case description, icon, time
+    }
+}
 
-
-
-
-
+struct ForecastTemperature {
+    let weekDay: String?
+    let hourlyForecast: [WeatherInfo]?
+}
