@@ -1,11 +1,15 @@
 import Foundation
 import UIKit
 
-protocol MainViewDelegate: AnyObject {
-//    func updateUI(with weather: [Weather])
-    func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float)
-    func setUpForecastWeather(with model: ForecastWeather)
-}
+// <<<<<<< collection-view-fix
+// protocol MainViewDelegate: AnyObject {
+// //    func updateUI(with weather: [Weather])
+//     func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float)
+//     func setUpForecastWeather(with model: ForecastWeather)
+// }
+// =======
+// #warning("Протокол обычно помещают в том же файле. Я бы переместил MainViewDelegate сюда и переименовал в MainPresenterDelegate")
+// >>>>>>> develop
 
 class MainPresenter {
     
@@ -17,7 +21,12 @@ class MainPresenter {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {
             case .success(let weatherModel):
-//                self.viewDelegate?.updateUI(with: [weatherModel])
+// <<<<<<< collection-view-fix
+// //                self.viewDelegate?.updateUI(with: [weatherModel])
+// =======
+//                 self.viewDelegate?.updateUI(with: [weatherModel])
+//                 #warning("Не понятно зачем ты передаешь [weatherModel] во вью контроллер, когда так хорошо и правильно разделил функции и передаешь туда всю нужную инфу через setUpMainLabel. updateUI можно выпилить. ")
+// >>>>>>> develop
                 self.viewDelegate?.setUpMainLabel(city: weatherModel.name,
                                                   temp: weatherModel.main.temp,
                                                   descriptionWeather: weatherModel.weather[0].description,
