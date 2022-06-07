@@ -1,7 +1,9 @@
 import Foundation
 import UIKit
 
-#warning("Протокол обычно помещают в том же файле. Я бы переместил MainViewDelegate сюда и переименовал в MainPresenterDelegate")
+protocol MainViewDelegate: AnyObject {
+    func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float)
+}
 
 class MainPresenter {
     
@@ -13,14 +15,11 @@ class MainPresenter {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {
             case .success(let weatherModel):
-                self.viewDelegate?.updateUI(with: [weatherModel])
-                #warning("Не понятно зачем ты передаешь [weatherModel] во вью контроллер, когда так хорошо и правильно разделил функции и передаешь туда всю нужную инфу через setUpMainLabel. updateUI можно выпилить. ")
                 self.viewDelegate?.setUpMainLabel(city: weatherModel.name,
                                                   temp: weatherModel.main.temp,
                                                   descriptionWeather: weatherModel.weather[0].description,
                                                   maxTemp: weatherModel.main.tempMax,
                                                   minTemp: weatherModel.main.tempMin)
-                self.viewDelegate?.setUpForecastWeather(city: weatherModel.name)
             case .failure(let error):
                 print(error)
             }

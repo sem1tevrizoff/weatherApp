@@ -41,11 +41,6 @@ class NetworkingManager {
                 completion(.failure(.invalidData))
                 return
             }
-
-            #warning("Below are some debug code I added and comments")
-            #warning("Also I added we comments to your model")
-            #warning("Nice netowrk layer btw 😉👍")
-            #warning("These warnings you can safely delete")
             
             self.logResponse(for: data) //Prints to console response
             do {

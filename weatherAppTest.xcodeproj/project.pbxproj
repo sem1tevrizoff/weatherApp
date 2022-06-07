@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2F11560E284A4BFA003B0A3E /* ExtensionMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F11560D284A4BFA003B0A3E /* ExtensionMainViewController.swift */; };
-		2F115610284A4C3B003B0A3E /* ProtocolMainViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F11560F284A4C3B003B0A3E /* ProtocolMainViewDelegate.swift */; };
 		2F115612284A66ED003B0A3E /* KelvinToCelsiusConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F115611284A66ED003B0A3E /* KelvinToCelsiusConverter.swift */; };
 		2F3D997F28438AEE00F97BC5 /* WeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3D997E28438AEE00F97BC5 /* WeatherModel.swift */; };
 		2F3D99A5284559D200F97BC5 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3D99A4284559D200F97BC5 /* MainPresenter.swift */; };
@@ -33,7 +32,6 @@
 
 /* Begin PBXFileReference section */
 		2F11560D284A4BFA003B0A3E /* ExtensionMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMainViewController.swift; sourceTree = "<group>"; };
-		2F11560F284A4C3B003B0A3E /* ProtocolMainViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolMainViewDelegate.swift; sourceTree = "<group>"; };
 		2F115611284A66ED003B0A3E /* KelvinToCelsiusConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KelvinToCelsiusConverter.swift; sourceTree = "<group>"; };
 		2F3D997E28438AEE00F97BC5 /* WeatherModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherModel.swift; sourceTree = "<group>"; };
 		2F3D99A4284559D200F97BC5 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -73,7 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				2F11560D284A4BFA003B0A3E /* ExtensionMainViewController.swift */,
-				2F11560F284A4C3B003B0A3E /* ProtocolMainViewDelegate.swift */,
 				2F115611284A66ED003B0A3E /* KelvinToCelsiusConverter.swift */,
 				2FCA96D9284F924700328173 /* IntExtension.swift */,
 				2FCA96DB284F98A800328173 /* UIImageView+Extension.swift */,
@@ -228,7 +225,6 @@
 				2F11560E284A4BFA003B0A3E /* ExtensionMainViewController.swift in Sources */,
 				2FE905AA284B619800AD79F5 /* ForecastWeather.swift in Sources */,
 				2FAF139C28417BDB003A03B0 /* AppDelegate.swift in Sources */,
-				2F115610284A4C3B003B0A3E /* ProtocolMainViewDelegate.swift in Sources */,
 				2FAF13BB28417C69003A03B0 /* NetworkingManager.swift in Sources */,
 				2F3D99A5284559D200F97BC5 /* MainPresenter.swift in Sources */,
 				2FAF139E28417BDB003A03B0 /* SceneDelegate.swift in Sources */,
