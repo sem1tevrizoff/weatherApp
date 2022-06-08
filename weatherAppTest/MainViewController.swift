@@ -46,13 +46,13 @@ class MainViewController: UIViewController {
         setUpChooseCityButton()
         setUpForecastCollectionView()
         presenter.setUpMainInfoLabels(choose: "Moscow")
-        presenter.setUpForecastWeather(choose: "Brest")
+        presenter.setUpForecastWeather(choose: "Moscow")
         
     }
     
     private func setUpForecastCollectionView() {
         view.addSubview(forecastCollectionView)
-        forecastCollectionView.backgroundColor = .systemBackground
+        forecastCollectionView.backgroundColor = .red
         forecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         forecastCollectionView.delegate = self
@@ -128,6 +128,7 @@ class MainViewController: UIViewController {
     @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.setUpMainInfoLabels(choose: cityName)
+             self?.presenter.setUpForecastWeather(choose: cityName)
          }
     }
 }
