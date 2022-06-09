@@ -12,8 +12,6 @@ class MainViewController: UIViewController {
     
     let forecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     
-    let chooseCityButton = UIButton()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -43,8 +41,8 @@ class MainViewController: UIViewController {
         setUpCurrentTempLabel()
         setUpDescriptionLabel()
         setUpMaxMinLabel()
-        setUpChooseCityButton()
         setUpForecastCollectionView()
+        configureNavigationBar()
         presenter.setUpMainInfoLabels(choose: "Moscow")
         presenter.setUpForecastWeather(choose: "Moscow")
         
@@ -98,7 +96,7 @@ class MainViewController: UIViewController {
             currentTempLabel.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
-
+    
     private func setUpCityNameLabel() {
         nameCityLabel.font = UIFont.systemFont(ofSize: 40)
         
@@ -109,27 +107,16 @@ class MainViewController: UIViewController {
         ])
     }
     
-    private func setUpChooseCityButton() {
-        view.addSubview(chooseCityButton)
-        chooseCityButton.setImage(UIImage(systemName: "plus.circle"), for: .normal)
-        chooseCityButton.isUserInteractionEnabled = true
-        chooseCityButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            chooseCityButton.centerXAnchor.constraint(equalTo: nameCityLabel.centerXAnchor, constant: 150),
-            chooseCityButton.centerYAnchor.constraint(equalTo: nameCityLabel.centerYAnchor, constant: 20),
-            chooseCityButton.heightAnchor.constraint(equalToConstant: 50),
-            chooseCityButton.widthAnchor.constraint(equalToConstant: 50)
-        ])
-        
-        chooseCityButton.addTarget(self, action: #selector(changeCity), for: .touchUpInside)
+    private func configureNavigationBar() {
+        let addButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(changeCity))
+        navigationItem.rightBarButtonItem = addButton
     }
     
     @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.setUpMainInfoLabels(choose: cityName)
              self?.presenter.setUpForecastWeather(choose: cityName)
-         }
+        }
     }
 }
 
