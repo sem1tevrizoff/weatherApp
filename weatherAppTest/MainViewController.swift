@@ -3,7 +3,6 @@ import UIKit
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
-    var weatherModel: ForecastWeather?
     
     let nameCityLabel = UILabel()
     let currentTempLabel = UILabel()
@@ -123,7 +122,6 @@ class MainViewController: UIViewController {
 extension MainViewController: MainViewDelegate {
     
     func setUpForecastWeather(with model: ForecastWeather) {
-        self.weatherModel = model
         DispatchQueue.main.async {
             self.forecastCollectionView.reloadData()
     }

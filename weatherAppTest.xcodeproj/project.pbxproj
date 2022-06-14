@@ -99,6 +99,7 @@
 				2FAF139F28417BDB003A03B0 /* MainViewController.swift */,
 				2FCA96DD284F998600328173 /* Cell */,
 				2F11560C284A4B84003B0A3E /* Extension + MainViewController */,
+				2FAF13BD28417D0A003A03B0 /* Model */,
 				2FAF13B028417C69003A03B0 /* networkManager */,
 				2FAF13A428417BDC003A03B0 /* Assets.xcassets */,
 				2FAF13A628417BDD003A03B0 /* LaunchScreen.storyboard */,
@@ -116,7 +117,6 @@
 				2FAF13B428417C69003A03B0 /* HTTPScheme.swift */,
 				2FAF13B528417C69003A03B0 /* NetworkingManager.swift */,
 				2FAF13B628417C69003A03B0 /* API.swift */,
-				2FAF13BD28417D0A003A03B0 /* Model */,
 			);
 			path = networkManager;
 			sourceTree = "<group>";

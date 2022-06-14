@@ -12,9 +12,10 @@ extension MainViewController {
          }
         
          let allertAction = UIAlertAction(title: "Find", style: .default) { UIAlertAction in
-             let firstTextField = alertVC.textFields![0] as UITextField
-             guard let cityName = firstTextField.text else { return }
-             completion(cityName)
+            guard let firstTextField = alertVC.textFields?.first,
+            let cityName = firstTextField.text,
+            !cityName.isEmpty else { return }
+            completion(cityName)
          }
         
          let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
@@ -29,13 +30,13 @@ extension MainViewController {
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-         return weatherModel?.list.count ?? 0
+         return presenter.forecastModel?.list.count ?? 0
      }
     
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
          guard
              let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell,
-             let cellModel = weatherModel?.list[indexPath.row]
+             let cellModel = presenter.forecastModel?.list[indexPath.row]
          else {
              return UICollectionViewCell()
          }

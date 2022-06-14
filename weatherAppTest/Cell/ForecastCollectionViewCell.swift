@@ -2,8 +2,6 @@ import UIKit
 
 class ForecastCollectionViewCell: UICollectionViewCell {
     
-    var dailyForecast: [WeatherInfo] = []
-    
     let weekdayLabel = UILabel()
     let tempSymbolImageView = UIImageView()
  

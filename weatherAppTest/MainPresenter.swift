@@ -10,6 +10,8 @@ class MainPresenter {
     
     let networkWeatherManager = NetworkingManager()
     weak var viewDelegate: MainViewDelegate?
+    var forecastModel: ForecastWeather?
+    
     
     func setUpMainInfoLabels(choose city: String) {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
@@ -30,6 +32,7 @@ class MainPresenter {
         networkWeatherManager.request(endpoint: WeatherAPI.forecast(city)) { [weak self] (result: Result<ForecastWeather, NetworkingError>) in
             switch result {
             case .success(let forecast):
+                self?.forecastModel = forecast
                 self?.viewDelegate?.setUpForecastWeather(with: forecast)
             case .failure(let error):
                 print(error)
