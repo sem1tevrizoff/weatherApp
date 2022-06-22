@@ -27,25 +27,25 @@ extension MainViewController {
      }
  }
 
-extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
-     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-         return presenter.forecastModel?.list.count ?? 0
-     }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return presenter.dailyForecast?.daily.count ?? 0
+    }
     
-     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-         guard
-             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ForecastCollectionViewCell", for: indexPath) as? ForecastCollectionViewCell,
-             let cellModel = presenter.forecastModel?.list[indexPath.row]
-         else {
-             return UICollectionViewCell()
-         }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DailyTableViewCell", for: indexPath) as? DailyTableViewCell,
+              let cellModel = presenter.dailyForecast?.daily[indexPath.row]
+        else { return UITableViewCell() }
         
-         cell.configure(with: cellModel)
-         return cell
-     }
+        cell.configure(with: cellModel)
+        return cell
+    }
     
-     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-         return CGSize(width: 50, height: 50)
-     }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50
+    }
 }
+
+
+

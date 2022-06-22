@@ -1,5 +1,6 @@
 
 import Foundation
+import CoreLocation
 
 class NetworkingManager {
     private func buildURL(endpoint: API) -> URLComponents {
@@ -66,6 +67,6 @@ class NetworkingManager {
     
     func logResponse(for data: Data) {
         let jsonData = try? JSONSerialization.jsonObject(with: data)
-        print(String(describing: jsonData))
+//        print(String(describing: jsonData))
     }
 }

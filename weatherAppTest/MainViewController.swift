@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 
 class MainViewController: UIViewController {
     
@@ -9,8 +10,8 @@ class MainViewController: UIViewController {
     let descriptionLabel = UILabel()
     let maxMinTempLabel = UILabel()
     
-    let forecastCollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    
+    let dailyTableView = UITableView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -48,21 +49,20 @@ class MainViewController: UIViewController {
     }
     
     private func setUpForecastCollectionView() {
-        view.addSubview(forecastCollectionView)
-        forecastCollectionView.backgroundColor = .red
-        forecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(dailyTableView)
+        dailyTableView.backgroundColor = .red
+        dailyTableView.translatesAutoresizingMaskIntoConstraints = false
+
+        dailyTableView.delegate = self
+        dailyTableView.dataSource = self
         
-        forecastCollectionView.delegate = self
-        forecastCollectionView.dataSource = self
-        
-        forecastCollectionView.register(ForecastCollectionViewCell.self,
-                                        forCellWithReuseIdentifier: "ForecastCollectionViewCell")
+        dailyTableView.register(DailyTableViewCell.self, forCellReuseIdentifier: "DailyTableViewCell")
         
         NSLayoutConstraint.activate([
-            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
-            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            forecastCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            dailyTableView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
+            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -115,27 +115,35 @@ class MainViewController: UIViewController {
          showCityAlert { [weak self] cityName in
              self?.presenter.setUpMainInfoLabels(choose: cityName)
              self?.presenter.setUpForecastWeather(choose: cityName)
+//             self?.presenter.setUpDailyWeather(with: "53.896196", and: "27.5503093")
+             self?.presenter.getCoordinate(addressString: cityName, completionHandler: { coordinate, error in
+                 
+             })
         }
     }
 }
 
 extension MainViewController: MainViewDelegate {
     
+    func setUpDailyWeather(with model: DailyForecast) {
+        DispatchQueue.main.async {
+            self.dailyTableView.reloadData()
+        }
+    }
+    
     func setUpForecastWeather(with model: ForecastWeather) {
         DispatchQueue.main.async {
-            self.forecastCollectionView.reloadData()
+            self.dailyTableView.reloadData()
     }
 }
     
-    func setUpMainLabel(city: String, temp: Float, descriptionWeather: String, maxTemp: Float, minTemp: Float) {
+    func setUpMainLabels(with model: Weather) {
         DispatchQueue.main.async {
-            self.nameCityLabel.text = city
-            self.currentTempLabel.text = "\(temp.kelvinToCelsiusConverter())°C"
-            self.descriptionLabel.text = "\(descriptionWeather)"
-            self.maxMinTempLabel.text = "Max temp \(maxTemp.kelvinToCelsiusConverter())°C Min temp \(minTemp.kelvinToCelsiusConverter())°C"
+            self.nameCityLabel.text = model.name
+            self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
+            self.descriptionLabel.text = "\(model.weather[0].description)"
+            self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
         }
     }
 }
-
-
 

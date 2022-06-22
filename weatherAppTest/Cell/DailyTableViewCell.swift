@@ -1,24 +1,16 @@
 import UIKit
 
-class ForecastCollectionViewCell: UICollectionViewCell {
+class DailyTableViewCell: UITableViewCell {
     
     let weekdayLabel = UILabel()
-    let tempSymbolImageView = UIImageView()
  
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = .systemBackground
-        setUpTempSymbolImageView()
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setUpWeekdayLabel()
-     }
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setUpTempSymbolImageView() {
-        contentView.addSubview(tempSymbolImageView)
-        tempSymbolImageView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     private func setUpWeekdayLabel() {
@@ -32,8 +24,8 @@ class ForecastCollectionViewCell: UICollectionViewCell {
             weekdayLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 8)
         ])
     }
-
-    func configure(with item: ForecastWeather.List) {
-        weekdayLabel.text = "\(item.main.temp.kelvinToCelsiusConverter())"
+    
+    func configure(with item: DailyForecast.Daily) {
+        weekdayLabel.text = "\(item.dt.getDateStringFromUTC()) \(item.temp.day.kelvinToCelsiusConverter())"
     }
 }
