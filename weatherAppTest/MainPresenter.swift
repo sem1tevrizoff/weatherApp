@@ -16,23 +16,6 @@ class MainPresenter {
     var forecastModel: ForecastWeather?
     var dailyForecast: DailyForecast?
 
-    
-    func getCoordinate(addressString : String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(addressString) { (placemarks, error) in
-            if error == nil {
-                if let placemark = placemarks?[0] {
-                    let location = placemark.location!
-                    
-                    completionHandler(location.coordinate, nil)
-                    return
-                }
-            }
-                
-            completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
-        }
-    }
-    
     func setUpMainInfoLabels(choose city: String) {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {
@@ -57,7 +40,7 @@ class MainPresenter {
         }
     }
     
-    func setUpDailyWeather(with lat: Double, and lon: Double) {
+    func setUpDailyWeather(lat: Double, lon: Double) {
         networkWeatherManager.request(endpoint: WeatherAPI.daily(lat: lat, lon: lon)) { [weak self] (result: Result<DailyForecast, NetworkingError>) in
             switch result {
             case .success(let daily):
@@ -67,6 +50,21 @@ class MainPresenter {
             case .failure(let error):
                 print(error)
             }
+        }
+    }
+    
+    func getCoordinate(addressString : String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(addressString) { (placemarks, error) in
+            if error == nil {
+                if let placemark = placemarks?[0] {
+                    let location = placemark.location!
+                    
+                    completionHandler(location.coordinate, nil)
+                    return
+                }
+            }
+            completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
         }
     }
 }

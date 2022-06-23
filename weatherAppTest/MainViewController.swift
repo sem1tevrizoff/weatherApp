@@ -44,8 +44,6 @@ class MainViewController: UIViewController {
         setUpForecastCollectionView()
         configureNavigationBar()
         presenter.setUpMainInfoLabels(choose: "Moscow")
-        presenter.setUpForecastWeather(choose: "Moscow")
-        
     }
     
     private func setUpForecastCollectionView() {
@@ -114,10 +112,9 @@ class MainViewController: UIViewController {
     @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.setUpMainInfoLabels(choose: cityName)
-             self?.presenter.setUpForecastWeather(choose: cityName)
-//             self?.presenter.setUpDailyWeather(with: "53.896196", and: "27.5503093")
              self?.presenter.getCoordinate(addressString: cityName, completionHandler: { coordinate, error in
-                 
+                 self?.presenter.setUpDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+                 print(coordinate)
              })
         }
     }
@@ -143,6 +140,7 @@ extension MainViewController: MainViewDelegate {
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
             self.descriptionLabel.text = "\(model.weather[0].description)"
             self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
+            self.presenter.setUpDailyWeather(lat: 55.7616, lon: 37.6095)
         }
     }
 }
