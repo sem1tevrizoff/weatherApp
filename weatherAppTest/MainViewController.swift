@@ -106,6 +106,7 @@ class MainViewController: UIViewController {
     
     private func configureNavigationBar() {
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(changeCity))
+        addButton.tintColor = .black
         navigationItem.rightBarButtonItem = addButton
     }
     
