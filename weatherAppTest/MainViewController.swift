@@ -14,7 +14,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBlue
         setUpLayouts()
     }
     
@@ -48,7 +48,7 @@ class MainViewController: UIViewController {
     
     private func setUpForecastCollectionView() {
         view.addSubview(dailyTableView)
-        dailyTableView.backgroundColor = .red
+        dailyTableView.backgroundColor = .systemBlue
         dailyTableView.translatesAutoresizingMaskIntoConstraints = false
 
         dailyTableView.delegate = self
