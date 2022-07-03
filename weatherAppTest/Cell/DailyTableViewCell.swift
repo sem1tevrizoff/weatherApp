@@ -31,35 +31,25 @@ class DailyTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .systemBlue
-        setUpWeekdayLabel()
-        setUpWeekDayImageView()
-        setUpMaxMinTempLabels()
+        setUpLayouts()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUpWeekdayLabel() {
+    private func setUpLayouts() {
         NSLayoutConstraint.activate([
             weekDayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
             weekDayLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
             weekDayLabel.heightAnchor.constraint(equalToConstant: 50),
-            weekDayLabel.widthAnchor.constraint(equalToConstant: 110)
-        ])
-    }
-    
-    private func setUpWeekDayImageView() {
-        NSLayoutConstraint.activate([
+            weekDayLabel.widthAnchor.constraint(equalToConstant: 110),
+            
             weekDayImageView.leadingAnchor.constraint(equalTo: weekDayLabel.trailingAnchor, constant: 10),
             weekDayImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
             weekDayImageView.heightAnchor.constraint(equalToConstant: 50),
-            weekDayImageView.widthAnchor.constraint(equalToConstant: 50)
-        ])
-    }
-    
-    private func setUpMaxMinTempLabels() {
-        NSLayoutConstraint.activate([
+            weekDayImageView.widthAnchor.constraint(equalToConstant: 50),
+            
             minMaxWeatherTempLabel.leadingAnchor.constraint(equalTo: weekDayImageView.trailingAnchor, constant: 10),
             minMaxWeatherTempLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
             minMaxWeatherTempLabel.heightAnchor.constraint(equalToConstant: 50),

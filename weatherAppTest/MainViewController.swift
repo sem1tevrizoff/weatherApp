@@ -7,23 +7,31 @@ class MainViewController: UIViewController {
     
     private lazy var nameCityLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 40)
         return label
     }()
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 60)
         return label
     }()
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 30)
         return label
     }()
     private lazy var  maxMinTempLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
     
     private lazy var dailyTableView: UITableView = {
         let tableView = UITableView()
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemBlue
+        tableView.layer.borderWidth = 0.5
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DailyTableViewCell.self, forCellReuseIdentifier: DailyTableViewCell.reuseID)
@@ -35,12 +43,16 @@ class MainViewController: UIViewController {
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         layout.scrollDirection = .horizontal
         layout.itemSize = UICollectionViewFlowLayout.automaticSize
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.delegate = self
-        view.dataSource = self
-        view.showsHorizontalScrollIndicator = false
-        view.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.reuseID)
-        return view
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBlue
+        collectionView.layer.borderWidth = 0.5
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.reuseID)
+        return collectionView
     }()
 
     override func viewDidLoad() {
@@ -60,14 +72,12 @@ class MainViewController: UIViewController {
     
     private func setUp() {
         setUpLabelLayouts()
-        setUpCityNameLabel()
-        setUpCurrentTempLabel()
-        setUpDescriptionLabel()
-        setUpMaxMinLabel()
-        setUpWeatherContentView()
-        setUpForecastTableView()
+        setUpLayouts()
         configureNavigationBar()
         presenter.setUpMainInfoLabels(choose: "Moscow")
+        presenter.getCoordinate(addressString: "Moscow") { coordinate, error in
+            self.presenter.setUpDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+        }
     }
     
     private func setUpLabelLayouts() {
@@ -75,82 +85,40 @@ class MainViewController: UIViewController {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
             $0.textAlignment = .center
-            
-            NSLayoutConstraint.activate([
-                $0.heightAnchor.constraint(equalToConstant: 100)
-            ])
         })
     }
     
-    private func setUpWeatherContentView() {
-        view.addSubview(forecastCollectionView)
-        forecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        forecastCollectionView.backgroundColor = .systemBlue
-        forecastCollectionView.layer.borderWidth = 0.5
-        
-        NSLayoutConstraint.activate([
-            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
-            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            forecastCollectionView.heightAnchor.constraint(equalToConstant: 100)
-        ])
-    }
-    
-    private func setUpForecastTableView() {
-        view.addSubview(dailyTableView)
-        dailyTableView.backgroundColor = .systemBlue
-        dailyTableView.translatesAutoresizingMaskIntoConstraints = false
-        dailyTableView.layer.borderWidth = 0.5
-        
-        NSLayoutConstraint.activate([
-            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            dailyTableView.topAnchor.constraint(equalTo: forecastCollectionView.bottomAnchor, constant: 10),
-            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
-    private func setUpMaxMinLabel() {
-        maxMinTempLabel.font = UIFont.systemFont(ofSize: 20)
-        
-        NSLayoutConstraint.activate([
-            maxMinTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
-            maxMinTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            maxMinTempLabel.heightAnchor.constraint(equalToConstant: 50),
-            maxMinTempLabel.widthAnchor.constraint(equalToConstant: 400)
-        ])
-    }
-    
-    private func setUpDescriptionLabel() {
-        descriptionLabel.font = UIFont.systemFont(ofSize: 30)
-        
-        NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: 50),
-            descriptionLabel.widthAnchor.constraint(equalToConstant: 300),
-        ])
-    }
-    
-    private func setUpCurrentTempLabel() {
-        currentTempLabel.font = UIFont.systemFont(ofSize: 60)
-        
-        NSLayoutConstraint.activate([
-            currentTempLabel.topAnchor.constraint(equalTo: nameCityLabel.bottomAnchor),
-            currentTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
-            currentTempLabel.heightAnchor.constraint(equalToConstant: 50),
-            currentTempLabel.widthAnchor.constraint(equalToConstant: 200)
-        ])
-    }
-    
-    private func setUpCityNameLabel() {
-        nameCityLabel.font = UIFont.systemFont(ofSize: 40)
-        
+    private func setUpLayouts() {
         NSLayoutConstraint.activate([
             nameCityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
             nameCityLabel.heightAnchor.constraint(equalToConstant: 70),
-            nameCityLabel.widthAnchor.constraint(equalToConstant: 200)
+            nameCityLabel.widthAnchor.constraint(equalToConstant: 200),
+            
+            currentTempLabel.topAnchor.constraint(equalTo: nameCityLabel.bottomAnchor),
+            currentTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            currentTempLabel.heightAnchor.constraint(equalToConstant: 50),
+            currentTempLabel.widthAnchor.constraint(equalToConstant: 200),
+            
+            descriptionLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 50),
+            descriptionLabel.widthAnchor.constraint(equalToConstant: 300),
+            
+            maxMinTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
+            maxMinTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            maxMinTempLabel.heightAnchor.constraint(equalToConstant: 50),
+            maxMinTempLabel.widthAnchor.constraint(equalToConstant: 400),
+            
+            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
+            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            forecastCollectionView.heightAnchor.constraint(equalToConstant: 100),
+            
+            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            dailyTableView.topAnchor.constraint(equalTo: forecastCollectionView.bottomAnchor, constant: 10),
+            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     
@@ -180,19 +148,12 @@ extension MainViewController: MainViewDelegate {
         }
     }
     
-    func setUpForecastWeather(with model: ForecastWeather) {
-        DispatchQueue.main.async {
-            self.dailyTableView.reloadData()
-    }
-}
-    
     func setUpMainLabels(with model: Weather) {
         DispatchQueue.main.async {
             self.nameCityLabel.text = model.name
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
             self.descriptionLabel.text = "\(model.weather[0].description)"
             self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
-            self.presenter.setUpDailyWeather(lat: 55.7616, lon: 37.6095)
         }
     }
 }

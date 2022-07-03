@@ -4,7 +4,6 @@ import CoreLocation
 
 protocol MainViewDelegate: AnyObject {
     func setUpMainLabels(with model: Weather)
-    func setUpForecastWeather(with model: ForecastWeather)
     func setUpDailyWeather(with model: DailyForecast)
 }
 
@@ -13,7 +12,6 @@ class MainPresenter {
     let networkWeatherManager = NetworkingManager()
     weak var viewDelegate: MainViewDelegate?
     var currentWeather: Weather?
-    var forecastModel: ForecastWeather?
     var dailyForecast: DailyForecast?
 
     func setUpMainInfoLabels(choose city: String) {
@@ -22,18 +20,6 @@ class MainPresenter {
             case .success(let weatherModel):
                 self.currentWeather = weatherModel
                 self.viewDelegate?.setUpMainLabels(with: weatherModel)
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-
-    func setUpForecastWeather(choose city: String) {
-        networkWeatherManager.request(endpoint: WeatherAPI.forecast(city)) { [weak self] (result: Result<ForecastWeather, NetworkingError>) in
-            switch result {
-            case .success(let forecast):
-                self?.forecastModel = forecast
-                self?.viewDelegate?.setUpForecastWeather(with: forecast)
             case .failure(let error):
                 print(error)
             }

@@ -67,15 +67,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2F11560C284A4B84003B0A3E /* Extension + MainViewController */ = {
+		2F11560C284A4B84003B0A3E /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				2F11560D284A4BFA003B0A3E /* ExtensionMainViewController.swift */,
 				2FCA96D9284F924700328173 /* IntExtension.swift */,
 				2F115611284A66ED003B0A3E /* KelvinToCelsiusConverter.swift */,
 				2FCA96DB284F98A800328173 /* UIImageView+Extension.swift */,
 			);
-			path = "Extension + MainViewController";
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		2FAF138F28417BDB003A03B0 = {
@@ -101,8 +100,9 @@
 				2FAF139D28417BDB003A03B0 /* SceneDelegate.swift */,
 				2F3D99A4284559D200F97BC5 /* MainPresenter.swift */,
 				2FAF139F28417BDB003A03B0 /* MainViewController.swift */,
+				2FCF35522872139B00EBCA88 /* Extension+MainViewController */,
 				2FCA96DD284F998600328173 /* Cell */,
-				2F11560C284A4B84003B0A3E /* Extension + MainViewController */,
+				2F11560C284A4B84003B0A3E /* Extension */,
 				2FAF13BD28417D0A003A03B0 /* Model */,
 				2FAF13B028417C69003A03B0 /* networkManager */,
 				2FAF13A428417BDC003A03B0 /* Assets.xcassets */,
@@ -142,6 +142,14 @@
 				2FCF35502872103A00EBCA88 /* ForecasCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		2FCF35522872139B00EBCA88 /* Extension+MainViewController */ = {
+			isa = PBXGroup;
+			children = (
+				2F11560D284A4BFA003B0A3E /* ExtensionMainViewController.swift */,
+			);
+			path = "Extension+MainViewController";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
