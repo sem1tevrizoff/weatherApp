@@ -5,17 +5,48 @@ class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     
-    let nameCityLabel = UILabel()
-    let currentTempLabel = UILabel()
-    let descriptionLabel = UILabel()
-    let maxMinTempLabel = UILabel()
+    private lazy var nameCityLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    private lazy var currentTempLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    private lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+    private lazy var  maxMinTempLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
     
-    let dailyTableView = UITableView()
+    private lazy var dailyTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(DailyTableViewCell.self, forCellReuseIdentifier: DailyTableViewCell.reuseID)
+        return tableView
+    }()
+
+    private lazy var forecastCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        layout.scrollDirection = .horizontal
+        layout.itemSize = UICollectionViewFlowLayout.automaticSize
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.delegate = self
+        view.dataSource = self
+        view.showsHorizontalScrollIndicator = false
+        view.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.reuseID)
+        return view
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
-        setUpLayouts()
+        setUp()
     }
     
     init(presenter: MainPresenter) {
@@ -27,7 +58,19 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUpLayouts() {
+    private func setUp() {
+        setUpLabelLayouts()
+        setUpCityNameLabel()
+        setUpCurrentTempLabel()
+        setUpDescriptionLabel()
+        setUpMaxMinLabel()
+        setUpWeatherContentView()
+        setUpForecastTableView()
+        configureNavigationBar()
+        presenter.setUpMainInfoLabels(choose: "Moscow")
+    }
+    
+    private func setUpLabelLayouts() {
         [nameCityLabel, currentTempLabel, descriptionLabel, maxMinTempLabel].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -37,29 +80,32 @@ class MainViewController: UIViewController {
                 $0.heightAnchor.constraint(equalToConstant: 100)
             ])
         })
-        setUpCityNameLabel()
-        setUpCurrentTempLabel()
-        setUpDescriptionLabel()
-        setUpMaxMinLabel()
-        setUpForecastCollectionView()
-        configureNavigationBar()
-        presenter.setUpMainInfoLabels(choose: "Moscow")
     }
     
-    private func setUpForecastCollectionView() {
+    private func setUpWeatherContentView() {
+        view.addSubview(forecastCollectionView)
+        forecastCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        forecastCollectionView.backgroundColor = .systemBlue
+        forecastCollectionView.layer.borderWidth = 0.5
+        
+        NSLayoutConstraint.activate([
+            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
+            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            forecastCollectionView.heightAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+    
+    private func setUpForecastTableView() {
         view.addSubview(dailyTableView)
         dailyTableView.backgroundColor = .systemBlue
         dailyTableView.translatesAutoresizingMaskIntoConstraints = false
-
-        dailyTableView.delegate = self
-        dailyTableView.dataSource = self
-        
-        dailyTableView.register(DailyTableViewCell.self, forCellReuseIdentifier: "DailyTableViewCell")
+        dailyTableView.layer.borderWidth = 0.5
         
         NSLayoutConstraint.activate([
-            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            dailyTableView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
-            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
+            dailyTableView.topAnchor.constraint(equalTo: forecastCollectionView.bottomAnchor, constant: 10),
+            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
@@ -68,8 +114,9 @@ class MainViewController: UIViewController {
         maxMinTempLabel.font = UIFont.systemFont(ofSize: 20)
         
         NSLayoutConstraint.activate([
-            maxMinTempLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            maxMinTempLabel.centerYAnchor.constraint(equalTo: descriptionLabel.centerYAnchor, constant: 40),
+            maxMinTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
+            maxMinTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            maxMinTempLabel.heightAnchor.constraint(equalToConstant: 50),
             maxMinTempLabel.widthAnchor.constraint(equalToConstant: 400)
         ])
     }
@@ -78,8 +125,9 @@ class MainViewController: UIViewController {
         descriptionLabel.font = UIFont.systemFont(ofSize: 30)
         
         NSLayoutConstraint.activate([
-            descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            descriptionLabel.centerYAnchor.constraint(equalTo: currentTempLabel.centerYAnchor, constant: 50),
+            descriptionLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            descriptionLabel.heightAnchor.constraint(equalToConstant: 50),
             descriptionLabel.widthAnchor.constraint(equalToConstant: 300),
         ])
     }
@@ -88,8 +136,9 @@ class MainViewController: UIViewController {
         currentTempLabel.font = UIFont.systemFont(ofSize: 60)
         
         NSLayoutConstraint.activate([
-            currentTempLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            currentTempLabel.centerYAnchor.constraint(equalTo: nameCityLabel.centerYAnchor, constant: 70),
+            currentTempLabel.topAnchor.constraint(equalTo: nameCityLabel.bottomAnchor),
+            currentTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            currentTempLabel.heightAnchor.constraint(equalToConstant: 50),
             currentTempLabel.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
@@ -98,8 +147,9 @@ class MainViewController: UIViewController {
         nameCityLabel.font = UIFont.systemFont(ofSize: 40)
         
         NSLayoutConstraint.activate([
-            nameCityLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            nameCityLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -350),
+            nameCityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            nameCityLabel.heightAnchor.constraint(equalToConstant: 70),
             nameCityLabel.widthAnchor.constraint(equalToConstant: 200)
         ])
     }
@@ -108,14 +158,14 @@ class MainViewController: UIViewController {
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(changeCity))
         addButton.tintColor = .black
         navigationItem.rightBarButtonItem = addButton
+        navigationController?.navigationBar.topItem?.title = "Weather App"
     }
     
-    @objc private func changeCity() {
+    @objc func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.setUpMainInfoLabels(choose: cityName)
              self?.presenter.getCoordinate(addressString: cityName, completionHandler: { coordinate, error in
                  self?.presenter.setUpDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-                 print(coordinate)
              })
         }
     }
@@ -126,6 +176,7 @@ extension MainViewController: MainViewDelegate {
     func setUpDailyWeather(with model: DailyForecast) {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
+            self.forecastCollectionView.reloadData()
         }
     }
     

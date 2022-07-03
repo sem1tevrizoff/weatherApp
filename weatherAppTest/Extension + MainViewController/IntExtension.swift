@@ -21,5 +21,14 @@ extension Int {
         
         return dateFormatter.weekdaySymbols[weekDayComponent]
     }
+    
+    func getHourStringFromUTC() -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(self))
+        let dateFormatter = DateFormatter()
+        dateFormatter.calendar = Calendar(identifier: .gregorian)
+        dateFormatter.dateFormat = "HH:mm"
+        
+        return dateFormatter.string(from: date)
+    }
 }
 
