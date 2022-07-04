@@ -10,16 +10,19 @@ class MainViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 40)
         return label
     }()
+    
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 60)
         return label
     }()
+    
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 30)
         return label
     }()
+    
     private lazy var  maxMinTempLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 20)
