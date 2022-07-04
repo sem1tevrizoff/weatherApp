@@ -9,35 +9,39 @@ class ForecastCollectionViewCell: UICollectionViewCell {
     
     private lazy var hourLabel: UILabel = {
         let label = UILabel()
-        contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var hourlyImageView: UIImageView = {
         let image = UIImageView()
-        contentView.addSubview(image)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     
     private lazy var hourlyTempLabel: UILabel = {
         let label = UILabel()
-        contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setUpLayouts()
+        setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUpLayouts() {
+    private func setupViews() {
+        contentView.addSubview(hourLabel)
+        contentView.addSubview(hourlyImageView)
+        contentView.addSubview(hourlyTempLabel)
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             hourLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
             hourLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -20),

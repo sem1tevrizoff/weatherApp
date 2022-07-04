@@ -31,7 +31,6 @@ class MainViewController: UIViewController {
     
     private lazy var dailyTableView: UITableView = {
         let tableView = UITableView()
-        view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemBlue
         tableView.layer.borderWidth = 0.5
@@ -47,7 +46,6 @@ class MainViewController: UIViewController {
         layout.scrollDirection = .horizontal
         layout.itemSize = UICollectionViewFlowLayout.automaticSize
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.addSubview(collectionView)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBlue
         collectionView.layer.borderWidth = 0.5
@@ -60,8 +58,7 @@ class MainViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBlue
-        setUp()
+        mainSetup()
     }
     
     init(presenter: MainPresenter) {
@@ -73,17 +70,24 @@ class MainViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUp() {
-        setUpLabelLayouts()
-        setUpLayouts()
+    private func mainSetup() {
+        setupViews()
+        setupLabelLayouts()
+        setupConstraints()
         configureNavigationBar()
-        presenter.setUpMainInfoLabels(choose: "Moscow")
+        presenter.setupMainInfoLabels(choose: "Moscow")
         presenter.getCoordinate(addressString: "Moscow") { coordinate, error in
-            self.presenter.setUpDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+            self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
     }
     
-    private func setUpLabelLayouts() {
+    private func setupViews() {
+        view.backgroundColor = .systemBlue
+        view.addSubview(forecastCollectionView)
+        view.addSubview(dailyTableView)
+    }
+    
+    private func setupLabelLayouts() {
         [nameCityLabel, currentTempLabel, descriptionLabel, maxMinTempLabel].forEach({
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -91,7 +95,7 @@ class MainViewController: UIViewController {
         })
     }
     
-    private func setUpLayouts() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             nameCityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
             nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
@@ -128,30 +132,38 @@ class MainViewController: UIViewController {
     private func configureNavigationBar() {
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(changeCity))
         addButton.tintColor = .black
-        navigationItem.rightBarButtonItem = addButton
-        navigationController?.navigationBar.topItem?.title = "Weather App"
+        
+        let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateCity))
+        updateButton.tintColor = .black
+        
+        navigationItem.rightBarButtonItems = [addButton, updateButton]
     }
     
     @objc func changeCity() {
          showCityAlert { [weak self] cityName in
-             self?.presenter.setUpMainInfoLabels(choose: cityName)
+             self?.presenter.setupMainInfoLabels(choose: cityName)
              self?.presenter.getCoordinate(addressString: cityName, completionHandler: { coordinate, error in
-                 self?.presenter.setUpDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+                 self?.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
              })
         }
+    }
+    
+    @objc func updateCity() {
+        self.dailyTableView.reloadData()
+        self.forecastCollectionView.reloadData()
     }
 }
 
 extension MainViewController: MainViewDelegate {
     
-    func setUpDailyWeather(with model: DailyForecast) {
+    func setupDailyWeather(with model: DailyForecast) {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
         }
     }
     
-    func setUpMainLabels(with model: Weather) {
+    func setupMainLabels(with model: Weather) {
         DispatchQueue.main.async {
             self.nameCityLabel.text = model.name
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"

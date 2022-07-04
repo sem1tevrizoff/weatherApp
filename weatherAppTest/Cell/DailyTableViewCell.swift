@@ -8,14 +8,12 @@ class DailyTableViewCell: UITableViewCell {
     
     private lazy var weekDayLabel: UILabel = {
         let label = UILabel()
-        contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var weekDayImageView: UIImageView = {
         let imageView = UIImageView()
-        contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -23,22 +21,28 @@ class DailyTableViewCell: UITableViewCell {
     private lazy var minMaxWeatherTempLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
-        contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
  
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = .systemBlue
-        setUpLayouts()
+        setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUpLayouts() {
+    private func setupViews() {
+        contentView.backgroundColor = .systemBlue
+        contentView.addSubview(weekDayLabel)
+        contentView.addSubview(weekDayImageView)
+        contentView.addSubview(minMaxWeatherTempLabel)
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             weekDayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
             weekDayLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),

@@ -3,8 +3,8 @@ import UIKit
 import CoreLocation
 
 protocol MainViewDelegate: AnyObject {
-    func setUpMainLabels(with model: Weather)
-    func setUpDailyWeather(with model: DailyForecast)
+    func setupMainLabels(with model: Weather)
+    func setupDailyWeather(with model: DailyForecast)
 }
 
 class MainPresenter {
@@ -14,24 +14,24 @@ class MainPresenter {
     var currentWeather: Weather?
     var dailyForecast: DailyForecast?
 
-    func setUpMainInfoLabels(choose city: String) {
+    func setupMainInfoLabels(choose city: String) {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {
             case .success(let weatherModel):
                 self.currentWeather = weatherModel
-                self.viewDelegate?.setUpMainLabels(with: weatherModel)
+                self.viewDelegate?.setupMainLabels(with: weatherModel)
             case .failure(let error):
                 print(error)
             }
         }
     }
     
-    func setUpDailyWeather(lat: Double, lon: Double) {
+    func setupDailyWeather(lat: Double, lon: Double) {
         networkWeatherManager.request(endpoint: WeatherAPI.daily(lat: lat, lon: lon)) { [weak self] (result: Result<DailyForecast, NetworkingError>) in
             switch result {
             case .success(let daily):
                 self?.dailyForecast = daily
-                self?.viewDelegate?.setUpDailyWeather(with: daily)
+                self?.viewDelegate?.setupDailyWeather(with: daily)
                 print(daily)
             case .failure(let error):
                 print(error)

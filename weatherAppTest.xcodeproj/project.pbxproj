@@ -27,7 +27,6 @@
 		2FCA96DA284F924700328173 /* IntExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA96D9284F924700328173 /* IntExtension.swift */; };
 		2FCA96DC284F98A800328173 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCA96DB284F98A800328173 /* UIImageView+Extension.swift */; };
 		2FCF35512872103A00EBCA88 /* ForecasCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FCF35502872103A00EBCA88 /* ForecasCollectionViewCell.swift */; };
-		2FE905AA284B619800AD79F5 /* ForecastWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FE905A9284B619800AD79F5 /* ForecastWeather.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,7 +52,6 @@
 		2FCA96D9284F924700328173 /* IntExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtension.swift; sourceTree = "<group>"; };
 		2FCA96DB284F98A800328173 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		2FCF35502872103A00EBCA88 /* ForecasCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecasCollectionViewCell.swift; sourceTree = "<group>"; };
-		2FE905A9284B619800AD79F5 /* ForecastWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForecastWeather.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				2F3D997E28438AEE00F97BC5 /* WeatherModel.swift */,
-				2FE905A9284B619800AD79F5 /* ForecastWeather.swift */,
 				2F41BB5B286203DD00F66175 /* Daily.swift */,
 			);
 			path = Model;
@@ -230,7 +227,6 @@
 				2FCA96DA284F924700328173 /* IntExtension.swift in Sources */,
 				2FAF13BA28417C69003A03B0 /* HTTPScheme.swift in Sources */,
 				2F11560E284A4BFA003B0A3E /* ExtensionMainViewController.swift in Sources */,
-				2FE905AA284B619800AD79F5 /* ForecastWeather.swift in Sources */,
 				2FAF139C28417BDB003A03B0 /* AppDelegate.swift in Sources */,
 				2FAF13BB28417C69003A03B0 /* NetworkingManager.swift in Sources */,
 				2F3D99A5284559D200F97BC5 /* MainPresenter.swift in Sources */,
