@@ -66,7 +66,7 @@ class NetworkingManager {
     }
     
     func logResponse(for data: Data) {
-        let jsonData = try? JSONSerialization.jsonObject(with: data)
+//        let jsonData = try? JSONSerialization.jsonObject(with: data)
 //        print(String(describing: jsonData))
     }
 }

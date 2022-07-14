@@ -34,7 +34,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "DailyTableViewCell", for: indexPath) as? DailyTableViewCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DailyTableViewCell.reuseID, for: indexPath) as? DailyTableViewCell,
               let cellModel = presenter.dailyForecast?.daily[indexPath.row]
         else { return UITableViewCell() }
         
