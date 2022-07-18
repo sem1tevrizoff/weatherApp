@@ -11,6 +11,9 @@ class MainPresenter {
     
     let networkWeatherManager = NetworkingManager()
     weak var viewDelegate: MainViewDelegate?
+    
+    var currentCity = ""
+    
     var currentWeather: Weather?
     var dailyForecast: DailyForecast?
 
@@ -19,6 +22,7 @@ class MainPresenter {
             switch result {
             case .success(let weatherModel):
                 self.currentWeather = weatherModel
+                self.currentCity = weatherModel.name
                 self.viewDelegate?.setupMainLabels(with: weatherModel)
             case .failure(let error):
                 print(error)
