@@ -7,24 +7,28 @@ class MainViewController: UIViewController {
     
     private lazy var nameCityLabel: UILabel = {
         let label = UILabel()
+        label.text = "Tap on plus"
         label.font = UIFont.systemFont(ofSize: 40)
         return label
     }()
     
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
+        label.text = "and"
         label.font = UIFont.systemFont(ofSize: 60)
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
+        label.text = "choose city"
         label.font = UIFont.systemFont(ofSize: 30)
         return label
     }()
     
     private lazy var  maxMinTempLabel: UILabel = {
         let label = UILabel()
+        label.text = "for weather"
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
@@ -75,10 +79,6 @@ class MainViewController: UIViewController {
         setupLabelLayouts()
         setupConstraints()
         configureNavigationBar()
-        presenter.setupMainInfoLabels(choose: "Moscow")
-        presenter.getCoordinate(addressString: "Moscow") { coordinate, error in
-            self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-        }
     }
     
     private func setupViews() {
@@ -133,24 +133,28 @@ class MainViewController: UIViewController {
         let addButton = UIBarButtonItem(image: UIImage(systemName: "plus.circle"), style: .done, target: self, action: #selector(changeCity))
         addButton.tintColor = .black
         
-        let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateCity))
+        let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateForecastWeather))
         updateButton.tintColor = .black
         
         navigationItem.rightBarButtonItems = [addButton, updateButton]
     }
     
-    @objc func changeCity() {
-         showCityAlert { [weak self] cityName in
-             self?.presenter.setupMainInfoLabels(choose: cityName)
-             self?.presenter.getCoordinate(addressString: cityName, completionHandler: { coordinate, error in
-                 self?.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-             })
+    private func updateWeather(){
+        self.presenter.setupMainInfoLabels(choose: presenter.currentCity)
+        self.presenter.getCoordinate(addressString: presenter.currentCity) { coordinate, error in
+            self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
     }
     
-    @objc func updateCity() {
-        self.dailyTableView.reloadData()
-        self.forecastCollectionView.reloadData()
+    @objc func changeCity() {
+         showCityAlert { [weak self] cityName in
+             self?.presenter.currentCity = cityName
+             self?.updateWeather()
+        }
+    }
+    
+    @objc func updateForecastWeather() {
+        updateWeather()
     }
 }
 
