@@ -7,23 +7,24 @@ protocol MainViewDelegate: AnyObject {
     func setupDailyWeather(with model: DailyForecast)
 }
 
-class MainPresenter {
+class MainPresenter: NSObject, CLLocationManagerDelegate {
     
     let networkWeatherManager = NetworkingManager()
     weak var viewDelegate: MainViewDelegate?
+    lazy var locationManager = CLLocationManager()
     
-    var currentCity = ""
+    lazy var currentCity = ""
     
     var currentWeather: Weather?
     var dailyForecast: DailyForecast?
-
+    
     func setupMainInfoLabels(choose city: String) {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {
             case .success(let weatherModel):
                 self.currentWeather = weatherModel
-                self.currentCity = weatherModel.name
                 self.viewDelegate?.setupMainLabels(with: weatherModel)
+                self.currentCity = weatherModel.name
             case .failure(let error):
                 print(error)
             }
@@ -43,7 +44,7 @@ class MainPresenter {
         }
     }
     
-    func getCoordinate(addressString : String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+    func getCoordinate(addressString: String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(addressString) { (placemarks, error) in
             if error == nil {
@@ -55,6 +56,46 @@ class MainPresenter {
                 }
             }
             completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+        }
+    }
+    
+    func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
+        if let lastLocation = self.locationManager.location {
+            let geocoder = CLGeocoder()
+            
+            geocoder.reverseGeocodeLocation(lastLocation,
+                                            completionHandler: { (placemarks, error) in
+                if error == nil {
+                    let firstLocation = placemarks?[0]
+                    completionHandler(firstLocation)
+                }
+                else {
+                    completionHandler(nil)
+                }
+            })
+        }
+        else {
+            completionHandler(nil)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation: CLLocation = locations[0] as CLLocation
+        
+        lookUpCurrentLocation { placemark in
+            self.setupMainInfoLabels(choose: placemark?.name ?? "")
+        }
+        self.setupDailyWeather(lat: userLocation.coordinate.latitude, lon: userLocation.coordinate.longitude)
+        manager.stopUpdatingLocation()
+    }
+    
+    func setupLocation() {
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
         }
     }
 }

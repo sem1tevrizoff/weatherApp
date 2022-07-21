@@ -4,7 +4,7 @@ struct Weather: Codable {
     
     let weather: [WeatherModel]
     let main: Main
-    let name: String
+    var name: String
     
     struct WeatherModel: Codable {
         let description: String

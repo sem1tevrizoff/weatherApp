@@ -1,34 +1,38 @@
 import UIKit
-import CoreLocation
 
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     
+    private lazy var loadActivityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        indicator.color = .black
+        indicator.style = .large
+        return indicator
+    }()
+    
     private lazy var nameCityLabel: UILabel = {
         let label = UILabel()
-        label.text = "Tap on plus"
-        label.font = UIFont.systemFont(ofSize: 40)
+        label.font = UIFont.systemFont(ofSize: 30)
         return label
     }()
     
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "and"
         label.font = UIFont.systemFont(ofSize: 60)
         return label
     }()
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "choose city"
         label.font = UIFont.systemFont(ofSize: 30)
         return label
     }()
     
     private lazy var  maxMinTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "for weather"
         label.font = UIFont.systemFont(ofSize: 20)
         return label
     }()
@@ -59,7 +63,7 @@ class MainViewController: UIViewController {
         collectionView.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.reuseID)
         return collectionView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mainSetup()
@@ -73,16 +77,18 @@ class MainViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func mainSetup() {
         setupViews()
         setupLabelLayouts()
         setupConstraints()
         configureNavigationBar()
+        presenter.setupLocation()
     }
     
     private func setupViews() {
         view.backgroundColor = .systemBlue
+        view.addSubview(loadActivityIndicator)
         view.addSubview(forecastCollectionView)
         view.addSubview(dailyTableView)
     }
@@ -98,9 +104,9 @@ class MainViewController: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             nameCityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
-            nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
+            nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             nameCityLabel.heightAnchor.constraint(equalToConstant: 70),
-            nameCityLabel.widthAnchor.constraint(equalToConstant: 200),
+            nameCityLabel.widthAnchor.constraint(equalToConstant: 300),
             
             currentTempLabel.topAnchor.constraint(equalTo: nameCityLabel.bottomAnchor),
             currentTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
@@ -126,6 +132,9 @@ class MainViewController: UIViewController {
             dailyTableView.topAnchor.constraint(equalTo: forecastCollectionView.bottomAnchor, constant: 10),
             dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
             dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            loadActivityIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            loadActivityIndicator.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180)
         ])
     }
     
@@ -140,6 +149,7 @@ class MainViewController: UIViewController {
     }
     
     private func updateWeather(){
+        self.loadActivityIndicator.startAnimating()
         self.presenter.setupMainInfoLabels(choose: presenter.currentCity)
         self.presenter.getCoordinate(addressString: presenter.currentCity) { coordinate, error in
             self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
@@ -164,6 +174,7 @@ extension MainViewController: MainViewDelegate {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
+            self.loadActivityIndicator.stopAnimating()
         }
     }
     
@@ -176,4 +187,3 @@ extension MainViewController: MainViewDelegate {
         }
     }
 }
-

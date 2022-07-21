@@ -12,6 +12,11 @@ struct DailyForecast: Codable {
     struct Current: Codable {
         let dt: Int
         let temp: Float
+        let weather: [Weather]
+        
+        struct Weather: Codable {
+            let description: String
+        }
     }
     
     struct Hourly: Codable {
