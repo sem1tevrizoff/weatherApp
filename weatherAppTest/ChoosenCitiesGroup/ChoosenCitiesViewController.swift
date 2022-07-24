@@ -1,31 +1,32 @@
-//
-//  ChoosenCitiesViewController.swift
-//  weatherAppTest
-//
-//  Created by sem1 on 24.07.22.
-//
-
 import UIKit
 import Foundation
+import CoreData
 
 class ChoosenCitiesViewController: UIViewController {
     
     let presenter: CitiesPresenter
     
-    private lazy var citiesTableView: UITableView = {
+    lazy var citiesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.borderWidth = 0.5
         tableView.layer.borderColor = UIColor.systemFill.cgColor
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(ChoosenCitiesTableViewCell.self, forCellReuseIdentifier: ChoosenCitiesTableViewCell.reuseID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
         return tableView
+    }()
+    
+    private lazy var searchBar: UISearchBar = {
+        let search = UISearchBar()
+        return search
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         mainSetup()
+        presenter.getItems()
+        self.presenter.fetchResultsController.delegate = self
     }
     
     init(presenter: CitiesPresenter) {
@@ -41,10 +42,19 @@ class ChoosenCitiesViewController: UIViewController {
         view.backgroundColor = .white
         setupViews()
         setupConstraints()
+        setupSearchBar()
     }
     
     private func setupViews() {
         view.addSubview(citiesTableView)
+    }
+    
+    private func setupSearchBar() {
+        citiesTableView.tableHeaderView = searchBar
+        searchBar.searchBarStyle = .minimal
+        searchBar.placeholder = "Search for city..."
+        searchBar.delegate = self
+        searchBar.sizeToFit()
     }
     
     private func setupConstraints() {
@@ -57,20 +67,17 @@ class ChoosenCitiesViewController: UIViewController {
     }
 }
 
-extension ChoosenCitiesViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+extension ChoosenCitiesViewController: NSFetchedResultsControllerDelegate {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.citiesTableView.reloadData()
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChoosenCitiesTableViewCell.reuseID, for: indexPath) as? ChoosenCitiesTableViewCell else { return UITableViewCell()}
-        cell.textLabel?.text = "123"
-        return cell
-    }
-    
-    
 }
 
 extension ChoosenCitiesViewController: CitiesViewDelegate {
-    
+    func updateTable() {
+        citiesTableView.reloadData()
+    }
+    func showAlert(title: String) {
+        print("failed")
+    }
 }

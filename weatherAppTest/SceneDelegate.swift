@@ -16,12 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             guard let windowScene = (scene as? UIWindowScene) else { return }
             let window = UIWindow(windowScene: windowScene)
-
+            
             let presenter = MainPresenter()
             let viewController = MainViewController(presenter: presenter)
             presenter.viewDelegate = viewController
             let navigation = UINavigationController(rootViewController: viewController)
-        
+
             let citiesPresenter = CitiesPresenter()
             let citiesViewController = ChoosenCitiesViewController(presenter: citiesPresenter)
             citiesPresenter.citiesViewDelegate = citiesViewController
@@ -62,5 +62,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
-}
 
+
+}

@@ -3,6 +3,7 @@ import UIKit
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
+    private lazy var citiesPresenter = CitiesPresenter()
     
     private lazy var loadActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -165,6 +166,7 @@ class MainViewController: UIViewController {
     @objc func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.currentCity = cityName
+             self?.citiesPresenter.saveItem(with: cityName)
              self?.updateWeather()
         }
     }
