@@ -147,8 +147,12 @@ class MainViewController: UIViewController {
         let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateForecastWeather))
         updateButton.tintColor = .black
         
-        navigationItem.rightBarButtonItems = [addButton, updateButton]
+        let choosenCityButton = UIBarButtonItem(image: UIImage(systemName: "thermometer"), style: .done, target: self, action: #selector(choosenCitiesButton))
+        choosenCityButton.tintColor = .black
+        
+        navigationItem.rightBarButtonItems = [addButton, updateButton, choosenCityButton]
     }
+    
     
     private func updateWeather(){
         self.loadActivityIndicator.startAnimating()
@@ -167,6 +171,10 @@ class MainViewController: UIViewController {
     
     @objc func updateForecastWeather() {
         updateWeather()
+    }
+    
+    @objc func choosenCitiesButton() {
+        self.navigationController?.pushViewController(ChoosenCitiesViewController(presenter: CitiesPresenter()), animated: true)
     }
 }
 
