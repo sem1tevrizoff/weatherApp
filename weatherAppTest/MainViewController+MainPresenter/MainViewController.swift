@@ -148,7 +148,7 @@ class MainViewController: UIViewController {
         let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateForecastWeather))
         updateButton.tintColor = .black
         
-        let choosenCityButton = UIBarButtonItem(image: UIImage(systemName: "thermometer"), style: .done, target: self, action: #selector(choosenCitiesButton))
+        let choosenCityButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet.rectangle.portrait"), style: .done, target: self, action: #selector(choosenCitiesButton))
         choosenCityButton.tintColor = .black
         
         navigationItem.rightBarButtonItems = [addButton, updateButton, choosenCityButton]

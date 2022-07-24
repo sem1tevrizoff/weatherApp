@@ -12,6 +12,8 @@ extension ChoosenCitiesViewController: UITableViewDelegate, UITableViewDataSourc
         
         let item = presenter.fetchResultsController.object(at: indexPath)
         
+        cell.backgroundColor = .systemBlue
+        cell.textLabel?.textColor = .white
         cell.textLabel?.text = item.name
         return cell
     }

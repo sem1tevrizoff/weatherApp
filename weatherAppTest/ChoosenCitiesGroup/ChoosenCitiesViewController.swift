@@ -9,6 +9,7 @@ class ChoosenCitiesViewController: UIViewController {
     lazy var citiesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemBlue
         tableView.layer.borderWidth = 0.5
         tableView.layer.borderColor = UIColor.systemFill.cgColor
         tableView.delegate = self
@@ -60,7 +61,7 @@ class ChoosenCitiesViewController: UIViewController {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             citiesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            citiesTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100),
+            citiesTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 85),
             citiesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             citiesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
