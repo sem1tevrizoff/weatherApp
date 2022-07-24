@@ -42,6 +42,7 @@ class MainViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemBlue
         tableView.layer.borderWidth = 0.5
+        tableView.layer.borderColor = UIColor.systemFill.cgColor
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DailyTableViewCell.self, forCellReuseIdentifier: DailyTableViewCell.reuseID)
@@ -57,6 +58,7 @@ class MainViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBlue
         collectionView.layer.borderWidth = 0.5
+        collectionView.layer.borderColor = UIColor.systemFill.cgColor
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator = false
