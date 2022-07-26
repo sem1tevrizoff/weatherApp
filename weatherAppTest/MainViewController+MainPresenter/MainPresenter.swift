@@ -5,15 +5,19 @@ import CoreLocation
 protocol MainViewDelegate: AnyObject {
     func setupMainLabels(with model: Weather)
     func setupDailyWeather(with model: DailyForecast)
+    func showAlert(title: String)
 }
 
 class MainPresenter: NSObject, CLLocationManagerDelegate {
     
     let networkWeatherManager = NetworkingManager()
+    private let storageManager = StorageManager()
+    
     weak var viewDelegate: MainViewDelegate?
     lazy var locationManager = CLLocationManager()
     
     lazy var currentCity = ""
+    lazy var items: [Item] = []
     
     var currentWeather: Weather?
     var dailyForecast: DailyForecast?
@@ -26,7 +30,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
                 self.viewDelegate?.setupMainLabels(with: weatherModel)
                 self.currentCity = weatherModel.name
             case .failure(let error):
-                print(error)
+                self.viewDelegate?.showAlert(title: error.localizedDescription)
             }
         }
     }
@@ -39,7 +43,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
                 self?.viewDelegate?.setupDailyWeather(with: daily)
                 print(daily)
             case .failure(let error):
-                print(error)
+                self?.viewDelegate?.showAlert(title: error.localizedDescription)
             }
         }
     }
@@ -98,5 +102,17 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
         }
     }
+    
+    func saveItem(with title: String) {
+        storageManager.save(with: title) { result in
+            switch result {
+            case .success(let item):
+                self.items.append(item)
+            case .failure(let error) :
+                self.viewDelegate?.showAlert(title: error.localizedDescription)
+            }
+        }
+    }
+    
 }
 

@@ -3,7 +3,6 @@ import UIKit
 class MainViewController: UIViewController {
     
     let presenter: MainPresenter
-    private lazy var citiesPresenter = CitiesPresenter()
     
     private lazy var loadActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -166,7 +165,7 @@ class MainViewController: UIViewController {
     @objc func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.currentCity = cityName
-             self?.citiesPresenter.saveItem(with: cityName)
+             self?.presenter.saveItem(with: cityName)
              self?.updateWeather()
         }
     }
@@ -176,7 +175,14 @@ class MainViewController: UIViewController {
     }
     
     @objc func choosenCitiesButton() {
-        self.navigationController?.pushViewController(ChoosenCitiesViewController(presenter: CitiesPresenter()), animated: true)
+        let vc = ChoosenCitiesViewController(presenter: CitiesPresenter())
+        vc.callBack = { (city: String) in
+            self.presenter.setupMainInfoLabels(choose: city)
+            self.presenter.getCoordinate(addressString: city) { coordinate, error in
+                self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+            }
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -186,7 +192,6 @@ extension MainViewController: MainViewDelegate {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
-            self.loadActivityIndicator.stopAnimating()
         }
     }
     
@@ -196,6 +201,12 @@ extension MainViewController: MainViewDelegate {
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
             self.descriptionLabel.text = "\(model.weather[0].description)"
             self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
+            self.loadActivityIndicator.stopAnimating()
         }
     }
+    
+    func showAlert(title: String) {
+        print("error")
+    }
+        
 }

@@ -66,8 +66,6 @@ class StorageManager {
         coreDataStack.save()
         items.append(item)
         item.createdAt = Date()
-    
-        coreDataStack.save()
         
         completion(.success(item))
     }

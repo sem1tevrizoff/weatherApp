@@ -6,6 +6,8 @@ class ChoosenCitiesViewController: UIViewController {
     
     let presenter: CitiesPresenter
     
+    var callBack: ((_ name: String) -> Void)?
+    
     lazy var citiesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -78,6 +80,7 @@ extension ChoosenCitiesViewController: CitiesViewDelegate {
     func updateTable() {
         citiesTableView.reloadData()
     }
+    
     func showAlert(title: String) {
         print("failed")
     }
