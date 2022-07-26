@@ -5,7 +5,7 @@ protocol CitiesViewDelegate: AnyObject {
     func showAlert(title: String)
 }
 
-class CitiesPresenter {
+class ChoosenCitiesPresenter {
     
     private let storageManager = StorageManager()
     

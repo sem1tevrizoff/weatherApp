@@ -4,7 +4,7 @@ import CoreData
 
 class ChoosenCitiesViewController: UIViewController {
     
-    let presenter: CitiesPresenter
+    let presenter: ChoosenCitiesPresenter
     
     var callBack: ((_ name: String) -> Void)?
     
@@ -32,7 +32,7 @@ class ChoosenCitiesViewController: UIViewController {
         self.presenter.fetchResultsController.delegate = self
     }
     
-    init(presenter: CitiesPresenter) {
+    init(presenter: ChoosenCitiesPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }

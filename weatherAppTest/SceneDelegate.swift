@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             presenter.viewDelegate = viewController
             let navigation = UINavigationController(rootViewController: viewController)
 
-            let citiesPresenter = CitiesPresenter()
+            let citiesPresenter = ChoosenCitiesPresenter()
             let citiesViewController = ChoosenCitiesViewController(presenter: citiesPresenter)
             citiesPresenter.citiesViewDelegate = citiesViewController
             

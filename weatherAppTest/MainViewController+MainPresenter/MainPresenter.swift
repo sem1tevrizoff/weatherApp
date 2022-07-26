@@ -22,6 +22,13 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
     var currentWeather: Weather?
     var dailyForecast: DailyForecast?
     
+    func updateInfoMainViewController(with city: String) {
+        setupMainInfoLabels(choose: city)
+        getCoordinate(addressString: city) { coordinate, error in
+            self.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
+        }
+    }
+    
     func setupMainInfoLabels(choose city: String) {
         networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
             switch result {

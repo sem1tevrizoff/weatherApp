@@ -156,10 +156,7 @@ class MainViewController: UIViewController {
     
     private func updateWeather(){
         self.loadActivityIndicator.startAnimating()
-        self.presenter.setupMainInfoLabels(choose: presenter.currentCity)
-        self.presenter.getCoordinate(addressString: presenter.currentCity) { coordinate, error in
-            self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-        }
+        presenter.updateInfoMainViewController(with: presenter.currentCity)
     }
     
     @objc func changeCity() {
@@ -175,12 +172,9 @@ class MainViewController: UIViewController {
     }
     
     @objc func choosenCitiesButton() {
-        let vc = ChoosenCitiesViewController(presenter: CitiesPresenter())
+        let vc = ChoosenCitiesViewController(presenter: ChoosenCitiesPresenter())
         vc.callBack = { (city: String) in
-            self.presenter.setupMainInfoLabels(choose: city)
-            self.presenter.getCoordinate(addressString: city) { coordinate, error in
-                self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-            }
+            self.presenter.updateInfoMainViewController(with: city)
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
