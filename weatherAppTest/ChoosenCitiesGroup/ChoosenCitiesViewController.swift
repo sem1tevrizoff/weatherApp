@@ -2,12 +2,10 @@ import UIKit
 import Foundation
 import CoreData
 
-class ChoosenCitiesViewController: UIViewController {
+final class ChoosenCitiesViewController: UIViewController {
     
     let presenter: ChoosenCitiesPresenter
-    
-    var callBack: ((_ name: String) -> Void)?
-    
+        
     lazy var citiesTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,17 +69,17 @@ class ChoosenCitiesViewController: UIViewController {
 }
 
 extension ChoosenCitiesViewController: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    final func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.citiesTableView.reloadData()
     }
 }
 
 extension ChoosenCitiesViewController: CitiesViewDelegate {
-    func updateTable() {
+    final func updateTable() {
         citiesTableView.reloadData()
     }
     
-    func showAlert(title: String) {
+    final func showAlert(title: String) {
         print("failed")
     }
 }

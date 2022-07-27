@@ -49,6 +49,4 @@ enum WeatherAPI: API {
             ]
         }
     }
-//https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=minutely&appid=fb5bece52b5f91b36dd8c1940132f704
 }
-//https://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid={API key}

@@ -1,6 +1,6 @@
 import Foundation
 
-struct DailyForecast: Codable {
+struct DailyModel: Codable {
     let lat: Double
     let lon: Double
     let timezone: String

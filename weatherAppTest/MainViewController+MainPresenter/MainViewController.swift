@@ -1,10 +1,10 @@
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     
-    private lazy var loadActivityIndicator: UIActivityIndicatorView = {
+    lazy var loadActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.hidesWhenStopped = true
@@ -156,10 +156,10 @@ class MainViewController: UIViewController {
     
     private func updateWeather(){
         self.loadActivityIndicator.startAnimating()
-        presenter.updateInfoMainViewController(with: presenter.currentCity)
+        presenter.getCityInfo(with: presenter.currentCity)
     }
     
-    @objc func changeCity() {
+    @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.currentCity = cityName
              self?.presenter.saveItem(with: cityName)
@@ -167,14 +167,14 @@ class MainViewController: UIViewController {
         }
     }
     
-    @objc func updateForecastWeather() {
+    @objc private func updateForecastWeather() {
         updateWeather()
     }
     
-    @objc func choosenCitiesButton() {
+    @objc private func choosenCitiesButton() {
         let vc = ChoosenCitiesViewController(presenter: ChoosenCitiesPresenter())
-        vc.callBack = { (city: String) in
-            self.presenter.updateInfoMainViewController(with: city)
+        vc.presenter.callBack = { (city: String) in
+            self.presenter.getCityInfo(with: city)
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -182,14 +182,14 @@ class MainViewController: UIViewController {
 
 extension MainViewController: MainViewDelegate {
     
-    func setupDailyWeather(with model: DailyForecast) {
+    final func setupDailyWeather(with model: DailyModel) {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
         }
     }
     
-    func setupMainLabels(with model: Weather) {
+    final func setupMainLabels(with model: WeatherModel) {
         DispatchQueue.main.async {
             self.nameCityLabel.text = model.name
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
@@ -199,8 +199,10 @@ extension MainViewController: MainViewDelegate {
         }
     }
     
-    func showAlert(title: String) {
-        print("error")
+    final func showAlert(title: String) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(with: title)
+        }
     }
         
 }

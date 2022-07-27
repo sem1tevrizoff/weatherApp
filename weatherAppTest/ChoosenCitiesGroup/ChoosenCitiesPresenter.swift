@@ -5,17 +5,19 @@ protocol CitiesViewDelegate: AnyObject {
     func showAlert(title: String)
 }
 
-class ChoosenCitiesPresenter {
+final class ChoosenCitiesPresenter {
     
     private let storageManager = StorageManager()
     
+    var callBack: ((_ name: String) -> Void)?
+
     weak var citiesViewDelegate: CitiesViewDelegate?
     
     lazy var fetchResultsController = storageManager.fetchResultsController
     
-    var items: [Item] = []
+    lazy var items: [Item] = []
     
-    func getItems() {
+    final func getItems() {
         storageManager.getItems { result in
             switch result {
             case .success(let items):
@@ -27,7 +29,7 @@ class ChoosenCitiesPresenter {
         }
     }
     
-    func getItemsPredicate(with name: String) {
+    final func getItemsPredicate(with name: String) {
         storageManager.getItemsPredicate(for: name) { result in
             switch result {
             case .success(let items):
@@ -39,7 +41,7 @@ class ChoosenCitiesPresenter {
         }
     }
     
-    func deleteItem(at indexPath: IndexPath) {
+    final func deleteItem(at indexPath: IndexPath) {
         storageManager.deleteItem(at: indexPath) { result in
             switch result {
             case .success(_):

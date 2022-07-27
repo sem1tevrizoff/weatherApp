@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class ForecastCollectionViewCell: UICollectionViewCell {
+final class ForecastCollectionViewCell: UICollectionViewCell {
     
     static var reuseID: String {
         String(describing: self)
@@ -60,7 +60,7 @@ class ForecastCollectionViewCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with item: DailyForecast.Hourly) {
+    final func configure(with item: DailyModel.Hourly) {
         hourLabel.text = "\(item.dt.getHourStringFromUTC())"
         hourlyImageView.loadImageFromUrl(urlString: "http://openweathermap.org/img/wn/\(item.weather[0].icon)@2x.png")
         hourlyTempLabel.text = "\(item.temp.kelvinToCelsiusConverter())°C"

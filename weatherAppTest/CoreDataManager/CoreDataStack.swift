@@ -1,13 +1,13 @@
 import Foundation
 import CoreData
 
-class CoreDataStack {
+final class CoreDataStack {
     lazy var managedContext: NSManagedObjectContext = {
         
         return self.storeContainer.viewContext
     }()
     
-    var storeContainer: NSPersistentContainer = {
+    lazy var storeContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "weatherAppTest")
         
         container.loadPersistentStores { _, error in
@@ -15,11 +15,10 @@ class CoreDataStack {
                 print(error)
             }
         }
-        
         return container
     }()
     
-    func save() {
+    final func save() {
         guard managedContext.hasChanges else { return }
         do {
             try managedContext.save()

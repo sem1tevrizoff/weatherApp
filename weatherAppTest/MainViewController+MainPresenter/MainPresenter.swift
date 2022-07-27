@@ -3,14 +3,14 @@ import UIKit
 import CoreLocation
 
 protocol MainViewDelegate: AnyObject {
-    func setupMainLabels(with model: Weather)
-    func setupDailyWeather(with model: DailyForecast)
+    func setupMainLabels(with model: WeatherModel)
+    func setupDailyWeather(with model: DailyModel)
     func showAlert(title: String)
 }
 
-class MainPresenter: NSObject, CLLocationManagerDelegate {
+final class MainPresenter: NSObject, CLLocationManagerDelegate {
     
-    let networkWeatherManager = NetworkingManager()
+    private let networkWeatherManager = NetworkingManager()
     private let storageManager = StorageManager()
     
     weak var viewDelegate: MainViewDelegate?
@@ -19,18 +19,18 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
     lazy var currentCity = ""
     lazy var items: [Item] = []
     
-    var currentWeather: Weather?
-    var dailyForecast: DailyForecast?
+    var currentWeather: WeatherModel?
+    var dailyForecast: DailyModel?
     
-    func updateInfoMainViewController(with city: String) {
+    final func getCityInfo(with city: String) {
         setupMainInfoLabels(choose: city)
         getCoordinate(addressString: city) { coordinate, error in
             self.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
         }
     }
     
-    func setupMainInfoLabels(choose city: String) {
-        networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<Weather, NetworkingError>) in
+    final func setupMainInfoLabels(choose city: String) {
+        networkWeatherManager.request(endpoint: WeatherAPI.link(city)) { (result: Result<WeatherModel, NetworkingError>) in
             switch result {
             case .success(let weatherModel):
                 self.currentWeather = weatherModel
@@ -42,8 +42,8 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func setupDailyWeather(lat: Double, lon: Double) {
-        networkWeatherManager.request(endpoint: WeatherAPI.daily(lat: lat, lon: lon)) { [weak self] (result: Result<DailyForecast, NetworkingError>) in
+    final func setupDailyWeather(lat: Double, lon: Double) {
+        networkWeatherManager.request(endpoint: WeatherAPI.daily(lat: lat, lon: lon)) { [weak self] (result: Result<DailyModel, NetworkingError>) in
             switch result {
             case .success(let daily):
                 self?.dailyForecast = daily
@@ -55,7 +55,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func getCoordinate(addressString: String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+    final func getCoordinate(addressString: String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(addressString) { (placemarks, error) in
             if error == nil {
@@ -70,7 +70,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
+    final func lookUpCurrentLocation(completionHandler: @escaping (CLPlacemark?) -> Void ) {
         if let lastLocation = self.locationManager.location {
             let geocoder = CLGeocoder()
             
@@ -90,7 +90,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    final func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation: CLLocation = locations[0] as CLLocation
         
         lookUpCurrentLocation { placemark in
@@ -100,7 +100,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
     
-    func setupLocation() {
+    final func setupLocation() {
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestWhenInUseAuthorization()
         if CLLocationManager.locationServicesEnabled() {
@@ -110,7 +110,7 @@ class MainPresenter: NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func saveItem(with title: String) {
+    final func saveItem(with title: String) {
         storageManager.save(with: title) { result in
             switch result {
             case .success(let item):

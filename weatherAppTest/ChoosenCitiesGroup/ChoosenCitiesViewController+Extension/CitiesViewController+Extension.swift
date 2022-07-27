@@ -29,9 +29,8 @@ extension ChoosenCitiesViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         let item = presenter.items[indexPath.row]
-        callBack?("\(item.name ?? "")")
+        presenter.callBack?("\(item.name ?? "")")
         self.navigationController?.popViewController(animated: true)
     }
 }

@@ -1,11 +1,11 @@
 import CoreData
 import Foundation
 
-class StorageManager {
+final class StorageManager {
     
-    let coreDataStack = CoreDataStack()
+    private let coreDataStack = CoreDataStack()
     
-    var items: [Item] = []
+    lazy var items: [Item] = []
     
     lazy var fetchResultsController: NSFetchedResultsController<Item> =  {
         let fetchRequest = Item.fetchRequest()
@@ -17,7 +17,7 @@ class StorageManager {
         return fetchResultsController
     }()
     
-    func getItems(completion: @escaping(Result<[Item], Error>) -> Void) {
+    final func getItems(completion: @escaping(Result<[Item], Error>) -> Void) {
         let context = coreDataStack.managedContext
         let fetchRequest = Item.fetchRequest()
         
@@ -38,7 +38,7 @@ class StorageManager {
         }
     }
     
-    func getItemsPredicate(for name: String, completion: @escaping (Result<[Item], Error>) -> Void) {
+    final func getItemsPredicate(for name: String, completion: @escaping (Result<[Item], Error>) -> Void) {
         var predicate: NSPredicate?
         if !name.isEmpty {
             predicate = NSPredicate(format: "name contains[c] '\(name)'")
@@ -57,7 +57,7 @@ class StorageManager {
         }
     }
     
-    func save(with name: String, completion: @escaping (Result<Item, Error>) -> Void) {
+    final func save(with name: String, completion: @escaping (Result<Item, Error>) -> Void) {
         let context = coreDataStack.managedContext
         
         let item = Item(context: context)
@@ -70,7 +70,7 @@ class StorageManager {
         completion(.success(item))
     }
     
-    func deleteItem(at indexPath: IndexPath, completion: @escaping (Result<[Item], Error>) -> Void ) {
+    final func deleteItem(at indexPath: IndexPath, completion: @escaping (Result<[Item], Error>) -> Void ) {
         let item = fetchResultsController.object(at: indexPath)
         let context = coreDataStack.managedContext
         

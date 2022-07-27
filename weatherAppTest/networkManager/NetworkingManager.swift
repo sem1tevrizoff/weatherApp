@@ -2,7 +2,7 @@
 import Foundation
 import CoreLocation
 
-class NetworkingManager {
+final class NetworkingManager {
     private func buildURL(endpoint: API) -> URLComponents {
         var components = URLComponents()
         components.scheme = endpoint.scheme.rawValue
@@ -12,7 +12,7 @@ class NetworkingManager {
         return components
     }
     
-    func request<T: Codable>(endpoint: API, completion: @escaping (Result<T, NetworkingError>) -> Void) {
+    final func request<T: Codable>(endpoint: API, completion: @escaping (Result<T, NetworkingError>) -> Void) {
         let components = buildURL(endpoint: endpoint)
         
         guard let url = components.url else {
