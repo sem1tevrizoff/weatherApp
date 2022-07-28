@@ -1,6 +1,6 @@
 import UIKit
 
-class DailyTableViewCell: UITableViewCell {
+final class DailyTableViewCell: UITableViewCell {
     
     static var reuseID: String {
         String(describing: self)
@@ -61,7 +61,7 @@ class DailyTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(with item: DailyForecast.Daily) {
+    final func configure(with item: DailyModel.Daily) {
         weekDayLabel.text = "\(item.dt.getDateStringFromUTC())"
         weekDayImageView.loadImageFromUrl(urlString: "http://openweathermap.org/img/wn/\(item.weather[0].icon)@2x.png")
         minMaxWeatherTempLabel.text = "min \(item.temp.min.kelvinToCelsiusConverter())°C --- max \(item.temp.max.kelvinToCelsiusConverter())°C"

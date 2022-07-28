@@ -16,12 +16,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             guard let windowScene = (scene as? UIWindowScene) else { return }
             let window = UIWindow(windowScene: windowScene)
-
+            
             let presenter = MainPresenter()
             let viewController = MainViewController(presenter: presenter)
             presenter.viewDelegate = viewController
             let navigation = UINavigationController(rootViewController: viewController)
+            navigation.navigationBar.tintColor = .black
+            navigation.navigationBar.backgroundColor = .systemBlue
 
+            let citiesPresenter = ChoosenCitiesPresenter()
+            let citiesViewController = ChoosenCitiesViewController(presenter: citiesPresenter)
+            citiesPresenter.citiesViewDelegate = citiesViewController
+            
             window.rootViewController = navigation
 
             self.window = window
@@ -58,5 +64,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
-}
 
+
+}

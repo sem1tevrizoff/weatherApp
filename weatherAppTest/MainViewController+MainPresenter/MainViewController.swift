@@ -1,10 +1,10 @@
 import UIKit
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     
-    private lazy var loadActivityIndicator: UIActivityIndicatorView = {
+    lazy var loadActivityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         indicator.hidesWhenStopped = true
@@ -42,6 +42,7 @@ class MainViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .systemBlue
         tableView.layer.borderWidth = 0.5
+        tableView.layer.borderColor = UIColor.systemFill.cgColor
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(DailyTableViewCell.self, forCellReuseIdentifier: DailyTableViewCell.reuseID)
@@ -57,6 +58,7 @@ class MainViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.backgroundColor = .systemBlue
         collectionView.layer.borderWidth = 0.5
+        collectionView.layer.borderColor = UIColor.systemFill.cgColor
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.showsHorizontalScrollIndicator = false
@@ -145,45 +147,62 @@ class MainViewController: UIViewController {
         let updateButton = UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .done, target: self, action: #selector(updateForecastWeather))
         updateButton.tintColor = .black
         
-        navigationItem.rightBarButtonItems = [addButton, updateButton]
+        let choosenCityButton = UIBarButtonItem(image: UIImage(systemName: "list.bullet.rectangle.portrait"), style: .done, target: self, action: #selector(choosenCitiesButton))
+        choosenCityButton.tintColor = .black
+        
+        navigationItem.rightBarButtonItems = [addButton, updateButton, choosenCityButton]
     }
+    
     
     private func updateWeather(){
         self.loadActivityIndicator.startAnimating()
-        self.presenter.setupMainInfoLabels(choose: presenter.currentCity)
-        self.presenter.getCoordinate(addressString: presenter.currentCity) { coordinate, error in
-            self.presenter.setupDailyWeather(lat: coordinate.latitude, lon: coordinate.longitude)
-        }
+        presenter.getCityInfo(with: presenter.currentCity)
     }
     
-    @objc func changeCity() {
+    @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.currentCity = cityName
+             self?.presenter.saveItem(with: cityName)
              self?.updateWeather()
         }
     }
     
-    @objc func updateForecastWeather() {
+    @objc private func updateForecastWeather() {
         updateWeather()
+    }
+    
+    @objc private func choosenCitiesButton() {
+        let vc = ChoosenCitiesViewController(presenter: ChoosenCitiesPresenter())
+        vc.presenter.callBack = { (city: String) in
+            self.presenter.getCityInfo(with: city)
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
 extension MainViewController: MainViewDelegate {
     
-    func setupDailyWeather(with model: DailyForecast) {
+    final func setupDailyWeather(with model: DailyModel) {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
-            self.loadActivityIndicator.stopAnimating()
         }
     }
     
-    func setupMainLabels(with model: Weather) {
+    final func setupMainLabels(with model: WeatherModel) {
         DispatchQueue.main.async {
             self.nameCityLabel.text = model.name
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
             self.descriptionLabel.text = "\(model.weather[0].description)"
             self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
+            self.loadActivityIndicator.stopAnimating()
         }
     }
+    
+    final func showAlert(title: String) {
+        DispatchQueue.main.async {
+            self.showErrorAlert(with: title)
+        }
+    }
+        
 }

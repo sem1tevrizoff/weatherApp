@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 extension UIImageView {
-    func loadImageFromUrl(urlString: String, placeholder: UIImage? = nil) {
+    final func loadImageFromUrl(urlString: String, placeholder: UIImage? = nil) {
         self.image = nil
 
         let imageCache = NSCache<NSString, UIImage>()

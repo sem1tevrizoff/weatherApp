@@ -1,6 +1,6 @@
 import Foundation
 
-struct Weather: Codable {
+struct WeatherModel: Codable {
     
     let weather: [WeatherModel]
     let main: Main

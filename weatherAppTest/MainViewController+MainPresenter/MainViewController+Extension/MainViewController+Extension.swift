@@ -3,7 +3,7 @@ import UIKit
 
 extension MainViewController {
     
-     func showCityAlert(with completion: @escaping (String) -> Void) {
+     final func showCityAlert(with completion: @escaping (String) -> Void) {
          let alertVC = UIAlertController(title: "Choose City",
                                          message: nil,
                                          preferredStyle: .alert)
@@ -25,6 +25,16 @@ extension MainViewController {
         
          self.present(alertVC, animated: true)
      }
+    
+    final func showErrorAlert(with message: String) {
+        let alertVC = UIAlertController(title: "Try to choose another city!",
+                                        message: message,
+                                        preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .destructive)
+        
+        alertVC.addAction(alertAction)
+        self.present(alertVC, animated: true)
+    }
  }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
