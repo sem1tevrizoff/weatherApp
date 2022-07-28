@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let viewController = MainViewController(presenter: presenter)
             presenter.viewDelegate = viewController
             let navigation = UINavigationController(rootViewController: viewController)
-            navigation.navigationBar.tintColor = .white
+            navigation.navigationBar.tintColor = .black
             navigation.navigationBar.backgroundColor = .systemBlue
 
             let citiesPresenter = ChoosenCitiesPresenter()
