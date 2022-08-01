@@ -2,9 +2,9 @@ import UIKit
 import Foundation
 import CoreData
 
-final class ChoosenCitiesViewController: UIViewController {
+final class CitiesListViewController: UIViewController {
     
-    let presenter: ChoosenCitiesPresenter
+    let presenter: CitiesListPresenter
         
     lazy var citiesTableView: UITableView = {
         let tableView = UITableView()
@@ -30,7 +30,7 @@ final class ChoosenCitiesViewController: UIViewController {
         self.presenter.fetchResultsController.delegate = self
     }
     
-    init(presenter: ChoosenCitiesPresenter) {
+    init(presenter: CitiesListPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,6 +44,8 @@ final class ChoosenCitiesViewController: UIViewController {
         setupViews()
         setupConstraints()
         setupSearchBar()
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.backgroundColor = .systemBlue
     }
     
     private func setupViews() {
@@ -68,18 +70,18 @@ final class ChoosenCitiesViewController: UIViewController {
     }
 }
 
-extension ChoosenCitiesViewController: NSFetchedResultsControllerDelegate {
+extension CitiesListViewController: NSFetchedResultsControllerDelegate {
     final func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.citiesTableView.reloadData()
     }
 }
 
-extension ChoosenCitiesViewController: CitiesViewDelegate {
+extension CitiesListViewController: CitiesViewDelegate {
     final func updateTable() {
         citiesTableView.reloadData()
     }
     
     final func showAlert(title: String) {
-        print("failed")
+        showErrorAlert(with: title)
     }
 }

@@ -162,7 +162,6 @@ final class MainViewController: UIViewController {
     @objc private func changeCity() {
          showCityAlert { [weak self] cityName in
              self?.presenter.currentCity = cityName
-             self?.presenter.saveItem(with: cityName)
              self?.updateWeather()
         }
     }
@@ -172,7 +171,7 @@ final class MainViewController: UIViewController {
     }
     
     @objc private func choosenCitiesButton() {
-        let vc = ChoosenCitiesViewController(presenter: ChoosenCitiesPresenter())
+        let vc = CitiesListViewController(presenter: CitiesListPresenter())
         vc.presenter.callBack = { (city: String) in
             self.presenter.getCityInfo(with: city)
         }
@@ -186,6 +185,7 @@ extension MainViewController: MainViewDelegate {
         DispatchQueue.main.async {
             self.dailyTableView.reloadData()
             self.forecastCollectionView.reloadData()
+            self.loadActivityIndicator.stopAnimating()
         }
     }
     
@@ -195,7 +195,6 @@ extension MainViewController: MainViewDelegate {
             self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
             self.descriptionLabel.text = "\(model.weather[0].description)"
             self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
-            self.loadActivityIndicator.stopAnimating()
         }
     }
     

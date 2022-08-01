@@ -58,8 +58,20 @@ final class StorageManager {
     }
     
     final func save(with name: String, completion: @escaping (Result<Item, Error>) -> Void) {
-        let context = coreDataStack.managedContext
         
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        request.predicate = NSPredicate(format: "name contains[c] '\(name)'")
+        do {
+            let context = coreDataStack.managedContext
+            let fetchResult = try! context.fetch(request)
+            if fetchResult.count > 0 {
+                for doubledData in fetchResult {
+                    context.delete(doubledData)
+                }
+            }
+        }
+        
+        let context = coreDataStack.managedContext
         let item = Item(context: context)
         item.name = name
         

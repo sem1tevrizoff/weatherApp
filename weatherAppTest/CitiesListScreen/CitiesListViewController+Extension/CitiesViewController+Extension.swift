@@ -2,7 +2,19 @@ import Foundation
 import UIKit
 import CoreData
 
-extension ChoosenCitiesViewController: UITableViewDelegate, UITableViewDataSource {
+extension CitiesListViewController {
+    final func showErrorAlert(with message: String) {
+        let alertVC = UIAlertController(title: "Try to choose another city!",
+                                        message: message,
+                                        preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .destructive)
+        
+        alertVC.addAction(alertAction)
+        self.present(alertVC, animated: true)
+    }
+}
+
+extension CitiesListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.presenter.fetchResultsController.sections?.first?.numberOfObjects ?? 0
     }
@@ -35,7 +47,7 @@ extension ChoosenCitiesViewController: UITableViewDelegate, UITableViewDataSourc
     }
 }
 
-extension ChoosenCitiesViewController: UISearchBarDelegate {
+extension CitiesListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.presenter.getItemsPredicate(with: searchText)
         citiesTableView.reloadData()

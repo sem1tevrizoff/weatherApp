@@ -36,8 +36,9 @@ final class MainPresenter: NSObject, CLLocationManagerDelegate {
                 self.currentWeather = weatherModel
                 self.viewDelegate?.setupMainLabels(with: weatherModel)
                 self.currentCity = weatherModel.name
+                self.saveItem(with: city)
             case .failure(let error):
-                self.viewDelegate?.showAlert(title: error.localizedDescription)
+                self.viewDelegate?.showAlert(title: error.rawValue)
             }
         }
     }
@@ -48,9 +49,8 @@ final class MainPresenter: NSObject, CLLocationManagerDelegate {
             case .success(let daily):
                 self?.dailyForecast = daily
                 self?.viewDelegate?.setupDailyWeather(with: daily)
-                print(daily)
             case .failure(let error):
-                self?.viewDelegate?.showAlert(title: error.localizedDescription)
+                self?.viewDelegate?.showAlert(title: error.rawValue)
             }
         }
     }
