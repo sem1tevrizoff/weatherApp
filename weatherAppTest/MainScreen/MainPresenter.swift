@@ -5,6 +5,7 @@ import CoreLocation
 protocol MainViewDelegate: AnyObject {
     func setupMainLabels(with model: WeatherModel)
     func setupDailyWeather(with model: DailyModel)
+    func setupHourlyWeather(with model: DailyModel)
     func showAlert(title: String)
 }
 
@@ -20,7 +21,7 @@ final class MainPresenter: NSObject, CLLocationManagerDelegate {
     lazy var items: [Item] = []
     
     var currentWeather: WeatherModel?
-    var dailyForecast: DailyModel?
+    var dailyModel: DailyModel?
     
     final func getCityInfo(with city: String) {
         setupMainInfoLabels(choose: city)
@@ -47,8 +48,9 @@ final class MainPresenter: NSObject, CLLocationManagerDelegate {
         networkWeatherManager.request(endpoint: WeatherAPI.daily(lat: lat, lon: lon)) { [weak self] (result: Result<DailyModel, NetworkingError>) in
             switch result {
             case .success(let daily):
-                self?.dailyForecast = daily
+                self?.dailyModel = daily
                 self?.viewDelegate?.setupDailyWeather(with: daily)
+                self?.viewDelegate?.setupHourlyWeather(with: daily)
             case .failure(let error):
                 self?.viewDelegate?.showAlert(title: error.rawValue)
             }

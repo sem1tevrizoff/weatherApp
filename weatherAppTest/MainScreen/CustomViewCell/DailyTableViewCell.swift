@@ -36,26 +36,26 @@ final class DailyTableViewCell: UITableViewCell {
     }
     
     private func setupViews() {
-        contentView.backgroundColor = .systemBlue
-        contentView.addSubview(weekDayLabel)
-        contentView.addSubview(weekDayImageView)
-        contentView.addSubview(minMaxWeatherTempLabel)
+        backgroundColor = .systemBlue
+        addSubview(weekDayLabel)
+        addSubview(weekDayImageView)
+        addSubview(minMaxWeatherTempLabel)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            weekDayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-            weekDayLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            weekDayLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            weekDayLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15),
             weekDayLabel.heightAnchor.constraint(equalToConstant: 50),
             weekDayLabel.widthAnchor.constraint(equalToConstant: 110),
             
             weekDayImageView.leadingAnchor.constraint(equalTo: weekDayLabel.trailingAnchor, constant: 10),
-            weekDayImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            weekDayImageView.topAnchor.constraint(equalTo: topAnchor, constant: 15),
             weekDayImageView.heightAnchor.constraint(equalToConstant: 50),
             weekDayImageView.widthAnchor.constraint(equalToConstant: 50),
             
             minMaxWeatherTempLabel.leadingAnchor.constraint(equalTo: weekDayImageView.trailingAnchor, constant: 10),
-            minMaxWeatherTempLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            minMaxWeatherTempLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15),
             minMaxWeatherTempLabel.heightAnchor.constraint(equalToConstant: 50),
             minMaxWeatherTempLabel.widthAnchor.constraint(equalToConstant: 200),
         ])

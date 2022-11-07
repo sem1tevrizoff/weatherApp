@@ -4,71 +4,20 @@ final class MainViewController: UIViewController {
     
     let presenter: MainPresenter
     
-    lazy var loadActivityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView()
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.hidesWhenStopped = true
-        indicator.color = .black
-        indicator.style = .large
-        return indicator
+    lazy var mainView: MainView = {
+        let view = MainView()
+        return view
     }()
     
-    private lazy var nameCityLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 30)
-        return label
-    }()
-    
-    private lazy var currentTempLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 60)
-        return label
-    }()
-    
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 30)
-        return label
-    }()
-    
-    private lazy var  maxMinTempLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20)
-        return label
-    }()
-    
-    private lazy var dailyTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .systemBlue
-        tableView.layer.borderWidth = 0.5
-        tableView.layer.borderColor = UIColor.systemFill.cgColor
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(DailyTableViewCell.self, forCellReuseIdentifier: DailyTableViewCell.reuseID)
-        return tableView
-    }()
-
-    private lazy var forecastCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        layout.scrollDirection = .horizontal
-        layout.itemSize = UICollectionViewFlowLayout.automaticSize
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .systemBlue
-        collectionView.layer.borderWidth = 0.5
-        collectionView.layer.borderColor = UIColor.systemFill.cgColor
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(ForecastCollectionViewCell.self, forCellWithReuseIdentifier: ForecastCollectionViewCell.reuseID)
-        return collectionView
-    }()
+    override func loadView() {
+        view = mainView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mainSetup()
+        presenter.viewDelegate = self
+        presenter.setupLocation()
     }
     
     init(presenter: MainPresenter) {
@@ -79,65 +28,17 @@ final class MainViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func mainSetup() {
-        setupViews()
-        setupLabelLayouts()
-        setupConstraints()
         configureNavigationBar()
-        presenter.setupLocation()
     }
     
-    private func setupViews() {
-        view.backgroundColor = .systemBlue
-        view.addSubview(loadActivityIndicator)
-        view.addSubview(forecastCollectionView)
-        view.addSubview(dailyTableView)
+    private func setDailyWeather(with model: [DailyModel.Daily]) {
+        mainView.dailyTableView.dailyForecast = model
     }
     
-    private func setupLabelLayouts() {
-        [nameCityLabel, currentTempLabel, descriptionLabel, maxMinTempLabel].forEach({
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.textAlignment = .center
-        })
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            nameCityLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
-            nameCityLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            nameCityLabel.heightAnchor.constraint(equalToConstant: 70),
-            nameCityLabel.widthAnchor.constraint(equalToConstant: 300),
-            
-            currentTempLabel.topAnchor.constraint(equalTo: nameCityLabel.bottomAnchor),
-            currentTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
-            currentTempLabel.heightAnchor.constraint(equalToConstant: 50),
-            currentTempLabel.widthAnchor.constraint(equalToConstant: 200),
-            
-            descriptionLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor),
-            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            descriptionLabel.heightAnchor.constraint(equalToConstant: 50),
-            descriptionLabel.widthAnchor.constraint(equalToConstant: 300),
-            
-            maxMinTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor),
-            maxMinTempLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            maxMinTempLabel.heightAnchor.constraint(equalToConstant: 50),
-            maxMinTempLabel.widthAnchor.constraint(equalToConstant: 400),
-            
-            forecastCollectionView.topAnchor.constraint(equalTo: maxMinTempLabel.bottomAnchor, constant: 10),
-            forecastCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            forecastCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            forecastCollectionView.heightAnchor.constraint(equalToConstant: 100),
-            
-            dailyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            dailyTableView.topAnchor.constraint(equalTo: forecastCollectionView.bottomAnchor, constant: 10),
-            dailyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            dailyTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            loadActivityIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            loadActivityIndicator.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180)
-        ])
+    private func setHourlyWeather(with model: [DailyModel.Hourly]) {
+        mainView.forecastCollectionView.hourlyForecast = model
     }
     
     private func configureNavigationBar() {
@@ -153,9 +54,8 @@ final class MainViewController: UIViewController {
         navigationItem.rightBarButtonItems = [addButton, updateButton, choosenCityButton]
     }
     
-    
     private func updateWeather(){
-        self.loadActivityIndicator.startAnimating()
+        self.mainView.currentWeatherView.loadActivityIndicator.startAnimating()
         presenter.getCityInfo(with: presenter.currentCity)
     }
     
@@ -177,24 +77,62 @@ final class MainViewController: UIViewController {
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
+    
+    final func showCityAlert(with completion: @escaping (String) -> Void) {
+        let alertVC = UIAlertController(title: "Choose City",
+                                        message: nil,
+                                        preferredStyle: .alert)
+        alertVC.addTextField { textField in
+            textField.placeholder = "City Name"
+        }
+       
+        let allertAction = UIAlertAction(title: "Find", style: .default) { UIAlertAction in
+           guard let firstTextField = alertVC.textFields?.first,
+           let cityName = firstTextField.text,
+           !cityName.isEmpty else { return }
+           completion(cityName)
+        }
+       
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+       
+        alertVC.addAction(allertAction)
+        alertVC.addAction(cancelAction)
+       
+        self.present(alertVC, animated: true)
+    }
+   
+   final func showErrorAlert(with message: String) {
+       let alertVC = UIAlertController(title: "Try to choose another city!",
+                                       message: message,
+                                       preferredStyle: .alert)
+       let alertAction = UIAlertAction(title: "Ok", style: .destructive)
+       
+       alertVC.addAction(alertAction)
+       self.present(alertVC, animated: true)
+   }
 }
 
 extension MainViewController: MainViewDelegate {
     
+    final func setupHourlyWeather(with model: DailyModel) {
+        DispatchQueue.main.async {
+            self.setHourlyWeather(with: model.hourly)
+        }
+    }
+    
     final func setupDailyWeather(with model: DailyModel) {
         DispatchQueue.main.async {
-            self.dailyTableView.reloadData()
-            self.forecastCollectionView.reloadData()
-            self.loadActivityIndicator.stopAnimating()
+            self.setDailyWeather(with: model.daily)
+            self.mainView.currentWeatherView.loadActivityIndicator.stopAnimating()
         }
     }
     
     final func setupMainLabels(with model: WeatherModel) {
         DispatchQueue.main.async {
-            self.nameCityLabel.text = model.name
-            self.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
-            self.descriptionLabel.text = "\(model.weather[0].description)"
-            self.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
+            self.mainView.currentWeatherView.nameCityLabel.text = model.name
+            self.mainView.currentWeatherView.currentTempLabel.text = "\(model.main.temp.kelvinToCelsiusConverter())°C"
+            self.mainView.currentWeatherView.descriptionLabel.text = "\(model.weather[0].description)"
+            self.mainView.currentWeatherView.maxMinTempLabel.text = "Max temp \(model.main.tempMax.kelvinToCelsiusConverter())°C Min temp \(model.main.tempMin.kelvinToCelsiusConverter())°C"
         }
     }
     
@@ -203,5 +141,4 @@ extension MainViewController: MainViewDelegate {
             self.showErrorAlert(with: title)
         }
     }
-        
 }

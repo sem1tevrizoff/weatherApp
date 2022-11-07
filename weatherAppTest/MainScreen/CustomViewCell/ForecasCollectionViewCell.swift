@@ -36,24 +36,24 @@ final class ForecastCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        contentView.addSubview(hourLabel)
-        contentView.addSubview(hourlyImageView)
-        contentView.addSubview(hourlyTempLabel)
+        addSubview(hourLabel)
+        addSubview(hourlyImageView)
+        addSubview(hourlyTempLabel)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            hourLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            hourLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -20),
+            hourLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            hourLabel.topAnchor.constraint(equalTo: topAnchor, constant: -20),
             hourLabel.heightAnchor.constraint(equalToConstant: 20),
             hourLabel.widthAnchor.constraint(equalToConstant: 50),
             
-            hourlyImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+            hourlyImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
             hourlyImageView.topAnchor.constraint(equalTo: hourLabel.bottomAnchor),
             hourlyImageView.heightAnchor.constraint(equalToConstant: 50),
             hourlyImageView.widthAnchor.constraint(equalToConstant: 50),
             
-            hourlyTempLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            hourlyTempLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             hourlyTempLabel.topAnchor.constraint(equalTo: hourlyImageView.bottomAnchor, constant: -5),
             hourlyTempLabel.heightAnchor.constraint(equalToConstant: 30),
             hourlyTempLabel.widthAnchor.constraint(equalToConstant: 70)
@@ -70,23 +70,5 @@ final class ForecastCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         hourLabel.text = nil
         hourlyImageView.image = nil
-    }
-}
-
-extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter.dailyForecast?.hourly.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ForecastCollectionViewCell.reuseID, for: indexPath) as? ForecastCollectionViewCell,
-            let cellModel = presenter.dailyForecast?.hourly[indexPath.row]
-        else {
-            return UICollectionViewCell()
-        }
-        
-        cell.configure(with: cellModel)
-        return cell
     }
 }

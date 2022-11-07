@@ -9,7 +9,6 @@ struct DailyModel: Codable {
     let hourly: [Hourly]
     let daily: [Daily]
     
-    
     struct Current: Codable {
         let dt: Int
         let temp: Float
