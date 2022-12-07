@@ -16,7 +16,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mainSetup()
-        presenter.viewDelegate = self
+        viewControllerDelegates()
         presenter.setupLocation()
     }
     
@@ -33,12 +33,12 @@ final class MainViewController: UIViewController {
         configureNavigationBar()
     }
     
-    private func setDailyWeather(with model: [DailyModel.Daily]) {
-        mainView.dailyTableView.dailyForecast = model
-    }
-    
-    private func setHourlyWeather(with model: [DailyModel.Hourly]) {
-        mainView.forecastCollectionView.hourlyForecast = model
+    private func viewControllerDelegates() {
+        presenter.viewDelegate = self
+        mainView.dailyTableView.tableView.delegate = self
+        mainView.dailyTableView.tableView.dataSource = self
+        mainView.forecastCollectionView.collectionView.delegate = self
+        mainView.forecastCollectionView.collectionView.dataSource = self
     }
     
     private func configureNavigationBar() {
@@ -72,7 +72,7 @@ final class MainViewController: UIViewController {
     
     @objc private func choosenCitiesButton() {
         let vc = CitiesListViewController(presenter: CitiesListPresenter())
-        vc.presenter.callBack = { (city: String) in
+        vc.presenter.cityName = { (city: String) in
             self.presenter.getCityInfo(with: city)
         }
         self.navigationController?.pushViewController(vc, animated: true)
@@ -116,13 +116,13 @@ extension MainViewController: MainViewDelegate {
     
     final func setupHourlyWeather(with model: DailyModel) {
         DispatchQueue.main.async {
-            self.setHourlyWeather(with: model.hourly)
+            self.mainView.forecastCollectionView.collectionView.reloadData()
         }
     }
     
     final func setupDailyWeather(with model: DailyModel) {
         DispatchQueue.main.async {
-            self.setDailyWeather(with: model.daily)
+            self.mainView.dailyTableView.tableView.reloadData()
             self.mainView.currentWeatherView.loadActivityIndicator.stopAnimating()
         }
     }
@@ -140,5 +140,43 @@ extension MainViewController: MainViewDelegate {
         DispatchQueue.main.async {
             self.showErrorAlert(with: title)
         }
+    }
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return presenter.dailyModel?.daily.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DailyTableViewCell.reuseID, for: indexPath) as? DailyTableViewCell,
+              let cellModel = presenter.dailyModel?.daily[indexPath.row]
+        else { return UITableViewCell() }
+        
+        cell.configure(with: cellModel)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
+}
+
+extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return presenter.dailyModel?.hourly.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ForecastCollectionViewCell.reuseID, for: indexPath) as? ForecastCollectionViewCell,
+              let cellModel = presenter.dailyModel?.hourly[indexPath.row]
+        else {
+            return UICollectionViewCell()
+        }
+        
+        cell.configure(with: cellModel)
+        return cell
     }
 }

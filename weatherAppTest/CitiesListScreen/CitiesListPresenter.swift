@@ -9,7 +9,7 @@ final class CitiesListPresenter {
     
     private let storageManager = StorageManager()
     
-    var callBack: ((_ name: String) -> Void)?
+    var cityName: ((_ name: String) -> Void)?
 
     weak var citiesViewDelegate: CitiesViewDelegate?
     

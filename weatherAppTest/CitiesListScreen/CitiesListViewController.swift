@@ -5,29 +5,20 @@ import CoreData
 final class CitiesListViewController: UIViewController {
     
     let presenter: CitiesListPresenter
-        
-    lazy var citiesTableView: UITableView = {
-        let tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.backgroundColor = .systemBlue
-        tableView.layer.borderWidth = 0.5
-        tableView.layer.borderColor = UIColor.systemFill.cgColor
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
-        return tableView
+    
+    lazy var citiesView: CitiesView = {
+        let view = CitiesView()
+        return view
     }()
     
-    private lazy var searchBar: UISearchBar = {
-        let search = UISearchBar()
-        return search
-    }()
+    override func loadView() {
+        view = citiesView
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         mainSetup()
         presenter.getItems()
-        self.presenter.fetchResultsController.delegate = self
     }
     
     init(presenter: CitiesListPresenter) {
@@ -41,44 +32,75 @@ final class CitiesListViewController: UIViewController {
     
     private func mainSetup() {
         view.backgroundColor = .white
-        setupViews()
-        setupConstraints()
-        setupSearchBar()
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.backgroundColor = .systemBlue
+        presenter.citiesViewDelegate = self
+        presenter.fetchResultsController.delegate = self
+        citiesView.citiesTableView.delegate = self
+        citiesView.citiesTableView.dataSource = self
+        citiesView.searchBar.delegate = self
     }
     
-    private func setupViews() {
-        view.addSubview(citiesTableView)
+    final func showErrorAlert(with message: String) {
+        let alertVC = UIAlertController(title: "Try to choose another city!",
+                                        message: message,
+                                        preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "Ok", style: .destructive)
+        
+        alertVC.addAction(alertAction)
+        self.present(alertVC, animated: true)
+    }
+}
+
+extension CitiesListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.presenter.fetchResultsController.sections?.first?.numberOfObjects ?? 0
     }
     
-    private func setupSearchBar() {
-        citiesTableView.tableHeaderView = searchBar
-        searchBar.searchBarStyle = .minimal
-        searchBar.placeholder = "Search for city..."
-        searchBar.delegate = self
-        searchBar.sizeToFit()
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
+        
+        let item = presenter.fetchResultsController.object(at: indexPath)
+        
+        cell.backgroundColor = .systemBlue
+        cell.textLabel?.textColor = .white
+        cell.textLabel?.text = item.name
+        return cell
     }
     
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            citiesTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            citiesTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 85),
-            citiesTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            citiesTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            presenter.deleteItem(at: indexPath)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = presenter.items[indexPath.row]
+        presenter.cityName?("\(item.name ?? "")")
+        self.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension CitiesListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.presenter.getItemsPredicate(with: searchText)
+        citiesView.citiesTableView.reloadData()
     }
 }
 
 extension CitiesListViewController: NSFetchedResultsControllerDelegate {
     final func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        self.citiesTableView.reloadData()
+        self.citiesView.citiesTableView.reloadData()
     }
 }
 
 extension CitiesListViewController: CitiesViewDelegate {
     final func updateTable() {
-        citiesTableView.reloadData()
+        citiesView.citiesTableView.reloadData()
     }
     
     final func showAlert(title: String) {

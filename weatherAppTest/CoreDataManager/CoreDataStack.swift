@@ -2,8 +2,8 @@ import Foundation
 import CoreData
 
 final class CoreDataStack {
+    
     lazy var managedContext: NSManagedObjectContext = {
-        
         return self.storeContainer.viewContext
     }()
     
